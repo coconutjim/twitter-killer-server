@@ -6,9 +6,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
 
-/**
- * Created by Андрей on 03.07.2014.
- */
 @Path("user")
 public class Login {
 

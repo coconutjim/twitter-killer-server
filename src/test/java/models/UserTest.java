@@ -36,7 +36,7 @@ public class UserTest {
 
     @Test
     public void testCheckTrueUserPassword() throws Exception {
-        assertEquals(true, user.checkPassword("000"));
+        assertTrue(user.checkPassword("000"));
     }
 
     @Test
