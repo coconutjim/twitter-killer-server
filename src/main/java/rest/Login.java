@@ -11,7 +11,10 @@ import java.util.HashMap;
 
 @Path("user")
 public class Login {
+
     private UserRepository allUsers;
+
+    /* A day and one millisecond */
     private final long EXPIRATION_TIME = 86400001L;
 
     @GET
