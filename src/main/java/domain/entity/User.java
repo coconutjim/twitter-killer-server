@@ -2,16 +2,18 @@ package domain.entity;
 
 import domain.util.UserUtil;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class User {
+public class User implements Serializable{
     private String login;
     private String passwordHash;
     private String salt;
     private int id;
-    private String token;
-    private Date expiration;
+    private String token = "";
+    private Date expiration = new Date();
 
+    private User() { }
     /**
      * Нужно доделать, так как при регистрации нового пользователя нужно генерировать salt, token, expiration
      * @param login

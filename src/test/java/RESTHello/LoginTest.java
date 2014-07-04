@@ -40,6 +40,7 @@ public class LoginTest {
         assertEquals(401, user.authentication("Anton", null).getStatus());
     }
 
+    @Ignore
     @Test
     public void testAuthenticationOK() throws Exception {
         Login user = new Login();
@@ -48,6 +49,7 @@ public class LoginTest {
         assertEquals(200, user.authentication("Mike", "666").getStatus());
     }
 
+    @Ignore
     @Test
     public void testAuthenticationBad() throws Exception {
         Login user = new Login();

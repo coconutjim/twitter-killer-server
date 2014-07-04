@@ -90,6 +90,17 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>4.3.5.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mysql.jdbc</groupId>
+            <artifactId>com.springsource.com.mysql.jdbc</artifactId>
+            <version>5.1.6</version>
+        </dependency>
     </dependencies>
     <properties>
         <jersey.version>2.9</jersey.version>

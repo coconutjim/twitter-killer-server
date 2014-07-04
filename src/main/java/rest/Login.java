@@ -1,6 +1,8 @@
 package rest;
 
+import domain.HibernateUtil;
 import domain.entity.User;
+import org.hibernate.Session;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -53,7 +55,24 @@ public class Login {
         User newUser = new User(userLogin, userPassword);
 
         if (allUsers.get(userLogin) == null)
-            allUsers.put(userLogin, newUser);
+        {
+            //allUsers.put(userLogin, newUser);
+
+         Session session = null;
+            try {
+                session = HibernateUtil.getSessionFactory().openSession();
+                session.beginTransaction();
+                //newUser.setId(1);
+
+                session.save(newUser);
+
+                session.getTransaction().commit();
+            }
+            finally {
+                if (session != null)
+                    session.close();
+            }
+    }
         else
             return Response.status(400).entity("Login is not available.").build();
 
