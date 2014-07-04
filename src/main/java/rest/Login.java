@@ -11,21 +11,15 @@ import java.util.HashMap;
  */
 @Path("user")
 public class Login {
-
-    static private HashMap<String, User> allUsers = new HashMap<>();
-
-    public static void setAllUsers(HashMap<String, User> allUsers) {
-        Login.allUsers = allUsers;
-    }
+    static HashMap<String, User> allUsers = new HashMap<>();
 
     @GET
     @Path("/all")
     @Produces("text/plain")
-    public String getAllUsers() {
+    public String doNotKnow() {
         String all = "";
-
-        for (User user : allUsers.values()) {
-            all += user.getName() + "\n";
+        for(User user : allUsers.values()) {
+            all += user.getLogin() + "\n";
         }
 
         return all;
@@ -33,42 +27,16 @@ public class Login {
 
     @POST
     @Path("/login")
-    public Response authentication(@HeaderParam("login") String userLogin, @HeaderParam("password") String userPassword) {
-
-        if (!isCorrectLoginPassword(userLogin, userPassword))
-            return Response.status(401).entity("Login or password is incorrect.").build();
-
-        boolean check = allUsers.get(userLogin).checkPassword(userPassword);
-
-        if (check)
-            return Response.status(200).entity("Password is correct. Your login: " + userLogin).build();
-        else
-            return Response.status(401).entity("Login or password is incorrect.").build();
+    public Response authentication(@HeaderParam("login") String login, @HeaderParam("password") String password) {
+        boolean check =  allUsers.get(login).checkPassword(password);
+        return Response.status(200).entity("Password correct? " + check + " Login: " + login).build();
     }
 
     @POST
     @Path("/reg")
-    public Response registration(@HeaderParam("login") String userLogin, @HeaderParam("password") String userPassword) {
+    public Response reg(@HeaderParam("login") String login, @HeaderParam("password") String password) {
+        User newUser = new User(login, password);
+        allUsers.put(login, newUser);
 
-        if (!isCorrectLoginPassword(userLogin, userPassword))
-            return Response.status(401).entity("Login or password is incorrect.").build();
-
-        User newUser = new User(userLogin, userPassword);
-
-        if (allUsers.get(userLogin) == null)
-            allUsers.put(userLogin, newUser);
-        else
-            return Response.status(400).entity("Login is not available.").build();
-
-        return Response.status(200).entity("User is registered. Your login: " + userLogin).build();
-    }
-
-    private static boolean isCorrectLoginPassword(String userLogin, String userPassword) {
-        if (userLogin == null
-                || userLogin.equals("")
-                || userPassword == null
-                || userPassword.equals(""))
-            return false;
-        return true;
-    }
-}
+        return Response.status(200).entity("User is logged in. Login: " + login).build();
+    }}
