@@ -19,8 +19,6 @@ public class User {
      */
     public User(String login, String password) {
         this.login = login;
-
-        //this.salt = "179d4b586a5746a73367f4ed8141ebc71";
         salt = UserUtil.generateSalt();
         this.passwordHash = UserUtil.getSHA256(password, salt);
     }
@@ -30,11 +28,11 @@ public class User {
         return passwordHash.equals(UserUtil.getSHA256(password, salt));
     }
 
-    public String getName() {
+    public String getLogin() {
         return login;
     }
 
-    public void setName(String login) {
+    public void setLogin(String login) {
         this.login = login;
     }
 
