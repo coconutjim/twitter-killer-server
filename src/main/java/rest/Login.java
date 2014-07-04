@@ -1,6 +1,7 @@
 package rest;
 
 import domain.entity.User;
+import domain.repository.UserRepository;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -8,12 +9,7 @@ import java.util.HashMap;
 
 @Path("user")
 public class Login {
-
-    static private HashMap<String, User> allUsers = new HashMap<>();
-
-    public static void setAllUsers(HashMap<String, User> allUsers) {
-        Login.allUsers = allUsers;
-    }
+    UserRepository allUsers;
 
     @GET
     @Path("/all")
@@ -35,7 +31,7 @@ public class Login {
         if (!isCorrectLoginPassword(userLogin, userPassword))
             return Response.status(401).entity("Login or password is incorrect.").build();
 
-        boolean check = allUsers.get(userLogin).checkPassword(userPassword);
+        boolean check = allUsers.getByLogin(userLogin).checkPassword(userPassword);
 
         if (check)
             return Response.status(200).entity("Password is correct. Your login: " + userLogin).build();
@@ -52,10 +48,10 @@ public class Login {
 
         User newUser = new User(userLogin, userPassword);
 
-        if (allUsers.get(userLogin) == null)
-            allUsers.put(userLogin, newUser);
+        if (allUsers.getByLogin(userLogin) == null)
+            allUsers.save(newUser);
         else
-            return Response.status(400).entity("Login is not available.").build();
+            return Response.status(401).entity("Login is not available.").build();
 
         return Response.status(200).entity("User is registered. Your login: " + userLogin).build();
     }
@@ -64,8 +60,13 @@ public class Login {
         if (userLogin == null
                 || userLogin.equals("")
                 || userPassword == null
-                || userPassword.equals(""))
+                || userPassword.equals("")
+                || userPassword.length() <= 8)
             return false;
         return true;
+    }
+
+    public void setAllUsers(UserRepository allUsers) {
+        this.allUsers = allUsers;
     }
 }
