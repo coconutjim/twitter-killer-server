@@ -2,9 +2,12 @@ package domain.util;
 
 import domain.entity.User;
 
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Вспомогательные методы для работы с классом entity.User
@@ -32,13 +35,11 @@ public class UserUtil {
     }
 
     public static String generateSalt() {
-        //TODO: salt
-        return null;
+        return new BigInteger(130,new Random()).toString(16);
     }
 
     public static String generateToken() {
-        //TODO: token
-        return null;
+        return UUID.randomUUID().toString();
     }
 
 

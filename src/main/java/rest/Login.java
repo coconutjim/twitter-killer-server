@@ -19,7 +19,7 @@ public class Login {
     public String doNotKnow() {
         String all = "";
         for(User user : allUsers.values()) {
-            all += user.getName() + "\n";
+            all += user.getLogin() + "\n";
         }
 
         return all;
