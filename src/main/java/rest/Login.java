@@ -2,14 +2,17 @@ package rest;
 
 import domain.entity.User;
 import domain.repository.UserRepository;
+import domain.util.UserUtil;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.Date;
 import java.util.HashMap;
 
 @Path("user")
 public class Login {
-    UserRepository allUsers;
+    private UserRepository allUsers;
+    private final long EXPIRATION_TIME = 86400001L;
 
     @GET
     @Path("/all")
@@ -31,10 +34,17 @@ public class Login {
         if (!isCorrectLoginPassword(userLogin, userPassword))
             return Response.status(401).entity("Login or password is incorrect.").build();
 
-        boolean check = allUsers.getByLogin(userLogin).checkPassword(userPassword);
+        User user = allUsers.getByLogin(userLogin);
+        boolean check = (user != null) && user.checkPassword(userPassword);
 
-        if (check)
-            return Response.status(200).entity("Password is correct. Your login: " + userLogin).build();
+        if (check) {
+
+            if(user.getToken() == null){
+                user.setToken(UserUtil.generateToken());
+                user.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME));
+            }
+            return Response.status(200).entity(user.getToken()).build();
+        }
         else
             return Response.status(401).entity("Login or password is incorrect.").build();
     }
