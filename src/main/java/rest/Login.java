@@ -11,7 +11,15 @@ import java.util.HashMap;
  */
 @Path("user")
 public class Login {
+
+
     static HashMap<String, User> allUsers = new HashMap<>();
+
+
+    public static void setAllUsers(HashMap<String, User> allUsers) {
+        Login.allUsers = allUsers;
+    }
+
 
     @GET
     @Path("/all")
@@ -34,7 +42,7 @@ public class Login {
 
     @POST
     @Path("/reg")
-    public Response reg(@HeaderParam("login") String login, @HeaderParam("password") String password) {
+    public Response registration(@HeaderParam("login") String login, @HeaderParam("password") String password) {
         User newUser = new User(login, password);
         allUsers.put(login, newUser);
 
