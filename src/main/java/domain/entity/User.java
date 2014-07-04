@@ -3,9 +3,12 @@ package domain.entity;
 import domain.util.UserUtil;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class User implements Serializable{
+    private List<Twitt> twitts;
     private String login;
     private String passwordHash;
     private String salt;
@@ -20,6 +23,7 @@ public class User implements Serializable{
      * @param password
      */
     public User(String login, String password) {
+        twitts = new ArrayList<Twitt>();
         this.login = login;
         salt = UserUtil.generateSalt();
         this.passwordHash = UserUtil.getSHA256(password, salt);
@@ -76,6 +80,11 @@ public class User implements Serializable{
 
     public void setExpiration(Date expiration) {
         this.expiration = expiration;
+    }
+
+    public void addTwitt (Twitt twitt)
+    {
+        twitts.add(twitt);
     }
 
 }
