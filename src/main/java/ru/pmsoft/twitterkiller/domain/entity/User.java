@@ -2,22 +2,28 @@ package ru.pmsoft.twitterkiller.domain.entity;
 
 import ru.pmsoft.twitterkiller.domain.util.UserUtil;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class User {
+public class User implements Serializable{
+    private List<Twitt> twitts;
     private String login;
     private String passwordHash;
     private String salt;
     private int id;
-    private String token;
-    private Date expiration;
+    private String token = "";
+    private Date expiration = new Date();
 
+    private User() { }
     /**
      * Нужно доделать, так как при регистрации нового пользователя нужно генерировать salt, token, expiration
      * @param login
      * @param password
      */
     public User(String login, String password) {
+        twitts = new ArrayList<Twitt>();
         this.login = login;
         salt = UserUtil.generateSalt();
         this.passwordHash = UserUtil.getSHA256(password, salt);
@@ -75,6 +81,11 @@ public class User {
 
     public void setExpiration(Date expiration) {
         this.expiration = expiration;
+    }
+
+    public void addTwitt (Twitt twitt)
+    {
+        twitts.add(twitt);
     }
 
 }
