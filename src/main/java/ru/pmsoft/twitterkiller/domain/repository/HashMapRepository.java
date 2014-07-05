@@ -16,6 +16,11 @@ public class HashMapRepository implements UserRepository {
     }
 
     @Override
+    public void updateUserTokenAndExpiration (User user) {
+        //Nothing to do, it is only for DB
+    }
+
+    @Override
     public User getByLogin(String name) {
         return users.get(name);
     }

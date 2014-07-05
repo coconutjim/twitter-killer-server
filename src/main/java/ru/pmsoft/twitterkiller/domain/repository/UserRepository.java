@@ -4,6 +4,7 @@ import ru.pmsoft.twitterkiller.domain.entity.User;
 
 public interface UserRepository {
     void save(User user);
+    public void updateUserTokenAndExpiration (User user);
     User getByLogin(String name);
     Iterable<User> values();
 }

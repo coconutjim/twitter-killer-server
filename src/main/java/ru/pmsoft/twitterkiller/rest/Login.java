@@ -2,7 +2,7 @@ package ru.pmsoft.twitterkiller.rest;
 
 import ru.pmsoft.twitterkiller.domain.dto.TokenOutput;
 import ru.pmsoft.twitterkiller.domain.entity.User;
-import ru.pmsoft.twitterkiller.domain.repository.HashMapRepository;
+import ru.pmsoft.twitterkiller.domain.repository.BDRepository;
 import ru.pmsoft.twitterkiller.domain.repository.UserRepository;
 import ru.pmsoft.twitterkiller.domain.util.UserUtil;
 import ru.pmsoft.twitterkiller.rest.exceptions.*;
@@ -19,7 +19,7 @@ public class Login {
 
     private static long TOKEN_LIFETIME = 86400L; //1 день (в секундах)
 
-    static private UserRepository allUsers = new HashMapRepository();
+    static private UserRepository allUsers = new BDRepository();
 
     public Login() {
     }
@@ -33,13 +33,13 @@ public class Login {
     @Produces("text/plain")
     public String getAllUsers() {
         String all = "";
+
         for (User user : allUsers.values()) {
             all += user.getLogin() + "\n";
         }
 
         return all;
     }
-
 
     @POST
     @Produces("application/json")
@@ -60,7 +60,11 @@ public class Login {
         if (user.getToken() == null || user.getExpiration() == null || user.getExpiration().before(new Date())) {
             user.setToken(UserUtil.generateToken());
             user.setExpiration(UserUtil.computeExpiration(TimeUnit.DAYS, 1));
+
+            //Обновляем записи в БД
+            allUsers.updateUserTokenAndExpiration(user);
         }
+
         return Response.status(200).entity(new TokenOutput(user.getToken(), user.getExpiration())).build();
     }
 

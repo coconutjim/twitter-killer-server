@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="ru.pmsoft.twitterkiller.domain.entity.User" table="informationAbout" catalog="users">
+        <id name="id" type="java.lang.Integer">
+            <column name="ID" />
+            <generator class="increment" />
+        </id>
+        <property name="login" type="text">
+            <column name="LOGIN" length="20" not-null="true" unique="true" />
+        </property>
+        <property name="passwordHash" type="text">
+            <column name="PASSWORD_HASH" length="20" not-null="true" />
+        </property>
+        <property name="salt" type="text">
+            <column name="SALT" length="20" not-null="true" />
+        </property>
+        <property name="token" type="text">
+            <column name="TOKEN" length="20" not-null="false" />
+        </property>
+        <property name="expiration" type="java.util.Date">
+            <column name="EXPIRATION" length="20" not-null="false" />
+        </property>
+    </class>
+</hibernate-mapping>
