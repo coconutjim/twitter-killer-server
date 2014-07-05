@@ -8,84 +8,83 @@ import java.util.Date;
 import java.util.List;
 
 public class User implements Serializable{
-    private List<Twitt> twitts;
-    private String login;
-    private String passwordHash;
-    private String salt;
-    private int id;
-    private String token = "";
-    private Date expiration = new Date();
+    //private List<Twitt> _twitts;
+    private String _login;
+    private String _passwordHash;
+    private String _salt;
+    private int _id;
+    private String _token = "";
+    private Date _expiration = new Date();
 
     private User() { }
-    /**
-     * Нужно доделать, так как при регистрации нового пользователя нужно генерировать salt, token, expiration
-     * @param login
-     * @param password
-     */
+
     public User(String login, String password) {
-        twitts = new ArrayList<Twitt>();
-        this.login = login;
-        salt = UserUtil.generateSalt();
-        this.passwordHash = UserUtil.getSHA256(password, salt);
-        token = UserUtil.generateToken();
+        //_twitts = new ArrayList<Twitt>();
+        _login = login;
+        _salt = UserUtil.generateSalt();
+        _passwordHash = UserUtil.getSHA256(password, _salt);
+        _token = UserUtil.generateToken();
     }
 
-
     public boolean checkPassword(String password) {
-        return passwordHash.equals(UserUtil.getSHA256(password, salt));
+        return _passwordHash.equals(UserUtil.getSHA256(password, _salt));
     }
 
     public String getLogin() {
-        return login;
+        return _login;
     }
 
     public void setLogin(String login) {
-        this.login = login;
+        _login = login;
     }
 
     public String getPasswordHash() {
-        return passwordHash;
+        return _passwordHash;
     }
 
-    public void setPasswordHash(String password) {
-        this.passwordHash = UserUtil.getSHA256(password, salt);
+    public void setPasswordHash(String passwordHash) {
+        _passwordHash = passwordHash;
+    }
+    
+    public void generatePasswordHash(String password) {
+        _passwordHash = UserUtil.getSHA256(password, _salt);
     }
 
     public String getSalt() {
-        return salt;
+        return _salt;
     }
 
     public void setSalt(String salt) {
-        this.salt = salt;
+        _salt = salt;
     }
 
     public int getId() {
-        return id;
+        return _id;
     }
 
     public void setId(int id) {
-        this.id = id;
+        _id = id;
     }
 
     public String getToken() {
-        return token;
+        return _token;
     }
 
     public void setToken(String token) {
-        this.token = token;
+        _token = token;
     }
 
     public Date getExpiration() {
-        return expiration;
+        return _expiration;
     }
 
     public void setExpiration(Date expiration) {
-        this.expiration = expiration;
+        _expiration = expiration;
     }
 
-    public void addTwitt (Twitt twitt)
-    {
-        twitts.add(twitt);
-    }
+    //public void addTwitt (Twitt twitt)
+    //{
+    //    _twitts.add(twitt);
+    //}
 
 }
