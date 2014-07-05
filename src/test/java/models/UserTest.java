@@ -1,6 +1,6 @@
 package models;
 
-import domain.entity.User;
+import ru.pmsoft.twitterkiller.domain.entity.User;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

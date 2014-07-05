@@ -1,6 +1,4 @@
-package domain.util;
-
-import domain.entity.User;
+package ru.pmsoft.twitterkiller.domain.util;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -8,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Вспомогательные методы для работы с классом entity.User
@@ -41,6 +40,12 @@ public class UserUtil {
     public static String generateToken() {
         return UUID.randomUUID().toString();
     }
+
+    public static Date computeExpiration(TimeUnit unit, long duration) {
+        return new Date(new Date().getTime() + unit.toMillis(duration));
+    }
+
+
 
 
 

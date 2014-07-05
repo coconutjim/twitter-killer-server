@@ -1,6 +1,6 @@
-package domain.entity;
+package ru.pmsoft.twitterkiller.domain.entity;
 
-import domain.util.UserUtil;
+import ru.pmsoft.twitterkiller.domain.util.UserUtil;
 
 import java.util.Date;
 
@@ -21,6 +21,7 @@ public class User {
         this.login = login;
         salt = UserUtil.generateSalt();
         this.passwordHash = UserUtil.getSHA256(password, salt);
+        token = UserUtil.generateToken();
     }
 
 

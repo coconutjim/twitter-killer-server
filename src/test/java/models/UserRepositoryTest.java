@@ -1,12 +1,12 @@
 package models;
-import domain.entity.User;
-import domain.repository.UserRepository;
+import ru.pmsoft.twitterkiller.domain.entity.User;
+import ru.pmsoft.twitterkiller.domain.repository.UserRepository;
 import org.junit.Test;
 
 import static org.mockito.Mockito.*;
 /**
- * Created by Виктор on 04.07.2014.
- */
+* Created by Виктор on 04.07.2014.
+*/
 public class UserRepositoryTest {
 
     @Test
