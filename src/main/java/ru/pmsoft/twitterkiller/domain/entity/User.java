@@ -1,7 +1,9 @@
 package ru.pmsoft.twitterkiller.domain.entity;
 
+import org.hibernate.annotations.Table;
 import ru.pmsoft.twitterkiller.domain.util.UserUtil;
 
+import javax.persistence.Entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,7 +20,6 @@ public class User implements Serializable{
     private Date expiration;
 
 
-
     private User() { }
 
     public User(String login, String password) {
@@ -26,8 +27,8 @@ public class User implements Serializable{
         this.login = login;
         salt = UserUtil.generateSalt();
         this.passwordHash = UserUtil.getSHA256(password, salt);
-        token = UserUtil.generateToken();
-        setExpiration(UserUtil.computeExpiration(TimeUnit.DAYS, 1));
+       // token = UserUtil.generateToken();
+       // setExpiration(UserUtil.computeExpiration(TimeUnit.DAYS, 1));
     }
 
 
@@ -49,10 +50,6 @@ public class User implements Serializable{
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
-    }
-
-    public void generatePasswordHash(String password) {
-        this.passwordHash = UserUtil.getSHA256(password, this.salt);
     }
 
     public String getSalt() {

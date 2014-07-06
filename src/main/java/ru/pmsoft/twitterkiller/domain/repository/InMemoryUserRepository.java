@@ -7,17 +7,12 @@ import java.util.HashMap;
 /**
  * Created by Андрей on 05.07.2014.
  */
-public class HashMapRepository implements UserRepository {
+public class InMemoryUserRepository implements UserRepository {
     HashMap<String, User> users = new HashMap<>();
 
     @Override
     public void save(User user) {
         users.put(user.getLogin(), user);
-    }
-
-    @Override
-    public void updateUserTokenAndExpiration (User user) {
-        //Nothing to do, it is only for DB
     }
 
     @Override
