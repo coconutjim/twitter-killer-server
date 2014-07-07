@@ -15,5 +15,6 @@
         <property name="hibernate.hbm2ddl.auto">update</property>
 
         <mapping resource="User.xml"/>
+        <mapping resource="Twitt.xml"/>
     </session-factory>
 </hibernate-configuration>

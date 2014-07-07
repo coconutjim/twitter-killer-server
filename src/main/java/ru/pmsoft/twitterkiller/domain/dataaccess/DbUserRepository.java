@@ -8,9 +8,6 @@ import ru.pmsoft.twitterkiller.domain.util.HibernateUtil;
 
 import java.util.List;
 
-/**
- * Created by Anton on 05/07/2014.
- */
 public class DbUserRepository implements UserRepository {
 
     @Override

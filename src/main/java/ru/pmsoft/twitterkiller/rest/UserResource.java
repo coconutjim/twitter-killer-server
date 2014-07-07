@@ -1,8 +1,10 @@
 package ru.pmsoft.twitterkiller.rest;
 
-import ru.pmsoft.twitterkiller.domain.dataaccess.DbUserRepository;
 import ru.pmsoft.twitterkiller.domain.dto.TokenOutput;
+import ru.pmsoft.twitterkiller.domain.dto.TwitOutput;
+import ru.pmsoft.twitterkiller.domain.entity.Twitt;
 import ru.pmsoft.twitterkiller.domain.entity.User;
+import ru.pmsoft.twitterkiller.domain.repository.TwittRepository;
 import ru.pmsoft.twitterkiller.domain.repository.UserRepository;
 import ru.pmsoft.twitterkiller.domain.util.UserUtil;
 import ru.pmsoft.twitterkiller.rest.exceptions.*;
@@ -11,6 +13,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static javax.ws.rs.core.Response.Status;
@@ -18,17 +21,20 @@ import static javax.ws.rs.core.Response.Status;
 @Path("user")
 public class UserResource {
 
-    private static long TOKEN_LIFETIME = 86400L; //1 день (в секундах)
+    //private static long TOKEN_LIFETIME = 86400L; //1 день (в секундах)
 
     static private UserRepository repository;
+    static private TwittRepository repositoryTwitt;
+
 
     @Inject
-    public UserResource(UserRepository repository) {
+    public UserResource(UserRepository repository, TwittRepository repositoryTwitt) {
         if (repository == null) {
             throw new IllegalArgumentException("Parameter 'repository' can't be null");
         }
 
         UserResource.repository = repository;
+        UserResource.repositoryTwitt = repositoryTwitt;
     }
 
     @GET
@@ -87,6 +93,44 @@ public class UserResource {
         return Response.status(200).entity("User is registered. Your login: " + login).build();
     }
 
+    @POST
+    @Path("/twitt/add")
+    @Produces("application/json")
+    public Response addTwitt(@HeaderParam("login") String login, @HeaderParam("twitt") String text) {
+
+        if (!isLoginCorrect(login))
+            throw new ClientException(Status.BAD_REQUEST, "Login can not be empty");
+        if (!isTwittCorrect(text))
+            throw new ClientException(Status.BAD_REQUEST, "Twitt can not be empty or less than 140 letters");
+
+        final User user = repository.getByLogin(login);
+        if (!isTokenValid(user.getExpiration()))
+            throw new ClientException(Status.BAD_REQUEST, "Your token is expired");
+
+        int id_user = user.getId();
+
+        Twitt twitt = new Twitt(id_user, text);
+        repositoryTwitt.save(twitt);
+        return Response.status(200).entity("Twitt is saved").build();
+    }
+
+    @GET
+    @Path("/twitt/all")
+    @Produces("application/json")
+    public Response allTwitts(@HeaderParam("login") String login) {
+
+        if (!isLoginCorrect(login))
+            throw new ClientException(Status.BAD_REQUEST, "Login can not be empty");
+
+        final User user = repository.getByLogin(login);
+
+        if (!isTokenValid(user.getExpiration()))
+            throw new ClientException(Status.BAD_REQUEST, "Your token is expired");
+
+        List<Twitt> allTwitts = repositoryTwitt.getAllByLogin(login);
+        return Response.status(200).entity(new TwitOutput(login, allTwitts)).build();
+    }
+
     private static boolean isLoginCorrect(String login) {
         return !(login == null || login.isEmpty());
     }
@@ -94,4 +138,13 @@ public class UserResource {
     private static boolean isPasswordCorrect(String password) {
         return !(password == null || password.isEmpty());
     }
+
+    private static boolean isTokenValid(Date expiration) {
+        return (new Date()).before(expiration);
+    }
+
+    private static boolean isTwittCorrect(String twitt) {
+        return !(twitt == null || twitt.isEmpty() || twitt.trim().isEmpty() || twitt.trim().length() > 140);
+    }
+
 }
