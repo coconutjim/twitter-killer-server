@@ -11,7 +11,7 @@ public class ExceptionMapper implements javax.ws.rs.ext.ExceptionMapper<Throwabl
 
     @Override
     public Response toResponse(Throwable throwable) {
-        ExceptionBody body = new ExceptionBody("Error on server");
+        ExceptionBody body = new ExceptionBody("Error on server: "+throwable.getMessage());
         return Response.status(500).entity(body).build();
     }
 }
