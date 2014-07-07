@@ -2,7 +2,9 @@ package ru.pmsoft.twitterkiller.models;
 import ru.pmsoft.twitterkiller.domain.entity.User;
 import ru.pmsoft.twitterkiller.domain.repository.UserRepository;
 import org.junit.Test;
+//import rest.Login;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 /**
 * Created by Виктор on 04.07.2014.
@@ -26,4 +28,7 @@ public class UserRepositoryTest {
         sut.getByLogin(dummyName);
         verify(sut).getByLogin(dummyName);
     }
+
+
+
 }

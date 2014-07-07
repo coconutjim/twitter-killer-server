@@ -87,6 +87,13 @@ public class UserResource {
         return Response.status(200).entity("User is registered. Your login: " + login).build();
     }
 
+    @GET
+    @Path("/error/")
+    @Produces("application/json")
+    public Response getError() throws Exception{
+        throw new Exception();
+    }
+
     private static boolean isLoginCorrect(String login) {
         return !(login == null || login.isEmpty());
     }
