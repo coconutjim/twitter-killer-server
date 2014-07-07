@@ -1,4 +1,4 @@
-package models;
+package ru.pmsoft.twitterkiller.models;
 
 import ru.pmsoft.twitterkiller.domain.entity.User;
 import org.junit.Before;
