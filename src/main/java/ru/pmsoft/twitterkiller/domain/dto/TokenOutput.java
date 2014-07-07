@@ -5,9 +5,7 @@ import ru.pmsoft.twitterkiller.domain.util.JsonDateSerializer;
 
 import java.util.Date;
 
-/**
- * Created by Андрей on 05.07.2014.
- */
+
 public class TokenOutput {
     private String token;
     private Date expiration;

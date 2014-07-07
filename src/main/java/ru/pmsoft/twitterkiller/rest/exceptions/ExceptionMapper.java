@@ -3,9 +3,7 @@ package ru.pmsoft.twitterkiller.rest.exceptions;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
-/**
- * Created by Виктор on 07.07.2014.
- */
+
 @Provider
 public class ExceptionMapper implements javax.ws.rs.ext.ExceptionMapper<Throwable> {
 

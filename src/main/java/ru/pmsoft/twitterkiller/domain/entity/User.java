@@ -1,17 +1,12 @@
 package ru.pmsoft.twitterkiller.domain.entity;
 
-import org.hibernate.annotations.Table;
 import ru.pmsoft.twitterkiller.domain.util.UserUtil;
 
-import javax.persistence.Entity;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-public class User implements Serializable{
-    //private List<Twitt> twitts;
+@SuppressWarnings("JpaObjectClassSignatureInspection")
+public class User implements Serializable {
     private String login;
     private String passwordHash;
     private String salt;
@@ -19,16 +14,13 @@ public class User implements Serializable{
     private String token;
     private Date expiration;
 
-
-    private User() { }
+    private User() {
+    }
 
     public User(String login, String password) {
-        //twitts = new ArrayList<Twitt>();
         this.login = login;
         salt = UserUtil.generateSalt();
         this.passwordHash = UserUtil.getSHA256(password, salt);
-       // token = UserUtil.generateToken();
-       // setExpiration(UserUtil.computeExpiration(TimeUnit.DAYS, 1));
     }
 
 
@@ -83,9 +75,4 @@ public class User implements Serializable{
     public void setExpiration(Date expiration) {
         this.expiration = expiration;
     }
-
-    //public void addTwitt (Twitt twitt)
-    //{
-    //    twitts.add(twitt);
-    //}
 }

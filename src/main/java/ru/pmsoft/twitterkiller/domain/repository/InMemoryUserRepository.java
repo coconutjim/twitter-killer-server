@@ -4,24 +4,21 @@ import ru.pmsoft.twitterkiller.domain.entity.User;
 
 import java.util.HashMap;
 
-/**
- * Created by Андрей on 05.07.2014.
- */
 public class InMemoryUserRepository implements UserRepository {
     HashMap<String, User> users = new HashMap<>();
 
     @Override
-    public void save(User user) {
+    public void createOrUpdate(User user) {
         users.put(user.getLogin(), user);
     }
 
     @Override
-    public User getByLogin(String name) {
-        return users.get(name);
+    public User getByLogin(String login) {
+        return users.get(login);
     }
 
     @Override
-    public Iterable<User> values() {
+    public Iterable<User> getAll() {
        return users.values();
     }
 }
