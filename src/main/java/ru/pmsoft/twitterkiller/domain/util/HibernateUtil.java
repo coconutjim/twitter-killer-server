@@ -1,7 +1,11 @@
 package ru.pmsoft.twitterkiller.domain.util;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.service.Service;
+
+import javax.imageio.spi.ServiceRegistry;
 
 /**
  * Created by Anton on 05/07/2014.
@@ -12,7 +16,10 @@ public class HibernateUtil {
 
     private static SessionFactory buildSessionFactory() {
         try {
-            return new Configuration().configure().buildSessionFactory();
+            Configuration configuration = new Configuration();
+            configuration.configure();
+            StandardServiceRegistryBuilder standardServiceRegistryBuilder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
+            return configuration.buildSessionFactory(standardServiceRegistryBuilder.build());
         }
         catch (Throwable ex) {
             System.err.println("Initial SessionFactory creation failed." + ex);
