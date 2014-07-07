@@ -6,9 +6,6 @@ import ru.pmsoft.twitterkiller.domain.repository.UserRepository;
 import javax.inject.Singleton;
 import javax.ws.rs.ApplicationPath;
 
-/**
- * Created by Андрей on 05.07.2014.
- */
 @ApplicationPath("rest")
 public class ApplicationConfig extends ResourceConfig {
     public ApplicationConfig() {

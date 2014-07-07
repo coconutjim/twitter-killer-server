@@ -4,6 +4,7 @@ import ru.pmsoft.twitterkiller.domain.util.UserUtil;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 @SuppressWarnings("JpaObjectClassSignatureInspection")
 public class User implements Serializable {
@@ -13,6 +14,7 @@ public class User implements Serializable {
     private int id;
     private String token;
     private Date expiration;
+    private Set<Session> sessions;
 
     private User() {
     }
@@ -23,6 +25,13 @@ public class User implements Serializable {
         this.passwordHash = UserUtil.getSHA256(password, salt);
     }
 
+    public Set<Session> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(Set<Session> sessions) {
+        this.sessions = sessions;
+    }
 
     public boolean checkPassword(String password) {
         return passwordHash.equals(UserUtil.getSHA256(password, salt));

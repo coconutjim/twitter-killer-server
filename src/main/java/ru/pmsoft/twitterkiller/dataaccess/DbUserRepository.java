@@ -11,25 +11,31 @@ public class DbUserRepository implements UserRepository {
 
     @Override
     public void createOrUpdate(User user) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = null;
         try {
+            session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
             session.saveOrUpdate(user);
             session.getTransaction().commit();
         } finally {
-            session.close();
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public User getByLogin(String login) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = null;
         User user = null;
         try {
+            session = HibernateUtil.getSessionFactory().openSession();
             user = (User) session.createCriteria(User.class).add(Restrictions.eq("login", login)).uniqueResult();
         } finally {
-            session.close();
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
         return user;
     }
@@ -38,11 +44,14 @@ public class DbUserRepository implements UserRepository {
     @Override
     public Iterable<User> getAll() {
         List<User> foundUsers = null;
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = null;
         try {
+            session = HibernateUtil.getSessionFactory().openSession();
             foundUsers = (List<User>) session.createCriteria(User.class).list();
         } finally {
-            session.close();
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
         return foundUsers;
     }
