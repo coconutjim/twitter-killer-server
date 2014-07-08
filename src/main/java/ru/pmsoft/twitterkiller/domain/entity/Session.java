@@ -2,10 +2,7 @@ package ru.pmsoft.twitterkiller.domain.entity;
 
 import java.util.Date;
 
-/**
- * Created by Андрей on 07.07.2014.
- */
-public class Session implements Cloneable {
+public class Session {
     private int id;
     private String token;
     private Date expiration;
@@ -14,9 +11,10 @@ public class Session implements Cloneable {
     public Session() {
     }
 
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public Session(String token, Date expiration, int userId) {
+        this.token = token;
+        this.expiration = expiration;
+        this.userId = userId;
     }
 
     public int getId() {
@@ -49,5 +47,9 @@ public class Session implements Cloneable {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public boolean isExpired() {
+        return (new Date()).after(expiration);
     }
 }

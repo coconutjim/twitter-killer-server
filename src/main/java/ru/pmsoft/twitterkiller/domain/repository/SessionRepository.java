@@ -5,9 +5,9 @@ import ru.pmsoft.twitterkiller.domain.entity.User;
 
 
 public interface SessionRepository {
-    void createOrUpdate(Session session);
+    void create(Session session);
 
-    Iterable<Session> getUserSeesions(User user);
+    Session getByUser(User user);
 
-    void deleteExpiredUserSessions(User user);
+    void delete(Session session);
 }

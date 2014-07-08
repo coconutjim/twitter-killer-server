@@ -1,32 +1,28 @@
 package ru.pmsoft.twitterkiller.rest;
 
 import ru.pmsoft.twitterkiller.domain.dto.TokenOutput;
+import ru.pmsoft.twitterkiller.domain.entity.Session;
 import ru.pmsoft.twitterkiller.domain.entity.User;
+import ru.pmsoft.twitterkiller.domain.factory.SessionFactory;
+import ru.pmsoft.twitterkiller.domain.factory.UserFactory;
 import ru.pmsoft.twitterkiller.domain.repository.SessionRepository;
 import ru.pmsoft.twitterkiller.domain.repository.UserRepository;
-import ru.pmsoft.twitterkiller.domain.services.SessionService;
-import ru.pmsoft.twitterkiller.domain.util.UserUtil;
 import ru.pmsoft.twitterkiller.rest.exceptions.ClientException;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
+import java.security.GeneralSecurityException;
 
 import static javax.ws.rs.core.Response.Status;
 
 @Path("user")
 public class UserResource {
 
-    private static final SessionService sessionService;
-
-    static {
-        sessionService = new SessionService();
-    }
-    private static long TOKEN_LIFETIME = 86400L; //1 день (в секундах)
     private UserRepository userRepository;
     private SessionRepository sessionRepository;
+    private UserFactory userFactory;
+    private SessionFactory sessionFactory;
 
     @Inject
     public UserResource(UserRepository userRepository,
@@ -39,7 +35,8 @@ public class UserResource {
         }
         this.userRepository = userRepository;
         this.sessionRepository = sessionRepository;
-
+        userFactory = new UserFactory();
+        sessionFactory = new SessionFactory();
     }
 
     private static boolean isLoginCorrect(String login) {
@@ -53,7 +50,8 @@ public class UserResource {
     @POST
     @Produces("application/json")
     @Path("/login")
-    public Response login(@HeaderParam("login") String login, @HeaderParam("password") String password) {
+    public Response login(@HeaderParam("login") String login, @HeaderParam("password") String password)
+            throws GeneralSecurityException {
 
         if (!isLoginCorrect(login))
             throw new ClientException(Status.BAD_REQUEST, "Login can not be empty");
@@ -63,25 +61,25 @@ public class UserResource {
         final User user = userRepository.getByLogin(login);
         if (user == null)
             throw new ClientException(Status.UNAUTHORIZED, "User is not found");
-        if (!user.checkPassword(password))
+        if (!userFactory.checkPassword(user, password))
             throw new ClientException(Status.UNAUTHORIZED, "Password is not correct");
 
-
-        //TODO: переделать null-проверку
-
-        if (user.getToken() == null || user.getExpiration() == null || user.getExpiration().before(new Date())) {
-            //TODO: класс для Token'a
-            user.setToken(UserUtil.generateToken());
-            user.setExpiration(UserUtil.computeExpiration(TimeUnit.DAYS, 1));
-            userRepository.createOrUpdate(user);
+        Session session = sessionRepository.getByUser(user);
+        if (session != null && session.isExpired()) {
+            sessionRepository.delete(session);
         }
-        return Response.status(200).entity(new TokenOutput(user.getToken(), user.getExpiration())).build();
+        if (session == null || session.isExpired()) {
+            session = sessionFactory.create(user);
+            sessionRepository.create(session);
+        }
+        return Response.status(200).entity(new TokenOutput(session.getToken(), session.getExpiration())).build();
     }
 
     @POST
     @Path("/register")
     @Produces("application/json")
-    public Response register(@HeaderParam("login") String login, @HeaderParam("password") String password) {
+    public Response register(@HeaderParam("login") String login, @HeaderParam("password") String password)
+            throws GeneralSecurityException {
 
         if (!isLoginCorrect(login))
             throw new ClientException(Status.BAD_REQUEST, "Login can not be empty");
@@ -90,10 +88,11 @@ public class UserResource {
         if (userRepository.getByLogin(login) != null)
             throw new ClientException(Status.BAD_REQUEST, "Login is already taken");
 
-        User user = new User(login, password);
+        User user = userFactory.create(login, password);
         userRepository.createOrUpdate(user);
-        return Response.status(200).entity("User is registered. Your login: " + login).build();
+        return Response.status(200).entity("{\"login\":" + "\"" + login + "\"}").build();
     }
+
 
     @GET
     @Path("/error/")

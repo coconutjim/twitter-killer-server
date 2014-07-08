@@ -1,5 +1,5 @@
 package ru.pmsoft.twitterkiller.domain.util;
 
-public interface StringGenerator {
+public interface SaltGenerator {
     String generate();
 }

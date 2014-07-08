@@ -4,9 +4,9 @@ package ru.pmsoft.twitterkiller.domain.util;
 import java.math.BigInteger;
 import java.util.Random;
 
-public class RandomStringGenerator implements StringGenerator {
+public class RandomSaltGenerator implements SaltGenerator {
     @Override
     public String generate() {
-        return new BigInteger(130,new Random()).toString(16);
+        return new BigInteger(130, new Random()).toString(16);
     }
 }
