@@ -2,7 +2,9 @@ package ru.pmsoft.twitterkiller.rest;
 
 import ru.pmsoft.twitterkiller.domain.dto.TokenOutput;
 import ru.pmsoft.twitterkiller.domain.entity.User;
+import ru.pmsoft.twitterkiller.domain.repository.SessionRepository;
 import ru.pmsoft.twitterkiller.domain.repository.UserRepository;
+import ru.pmsoft.twitterkiller.domain.services.SessionService;
 import ru.pmsoft.twitterkiller.domain.util.UserUtil;
 import ru.pmsoft.twitterkiller.rest.exceptions.ClientException;
 
@@ -17,16 +19,27 @@ import static javax.ws.rs.core.Response.Status;
 @Path("user")
 public class UserResource {
 
-    private static long TOKEN_LIFETIME = 86400L; //1 день (в секундах)
+    private static final SessionService sessionService;
 
-    static private UserRepository repository;
+    static {
+        sessionService = new SessionService();
+    }
+    private static long TOKEN_LIFETIME = 86400L; //1 день (в секундах)
+    private UserRepository userRepository;
+    private SessionRepository sessionRepository;
 
     @Inject
-    public UserResource(UserRepository repository) {
-        if (repository == null) {
-            throw new IllegalArgumentException("Parameter 'repository' can't be null");
+    public UserResource(UserRepository userRepository,
+                        SessionRepository sessionRepository) {
+        if (userRepository == null) {
+            throw new IllegalArgumentException("Parameter 'userRepository' can't be null");
         }
-        UserResource.repository = repository;
+        if (sessionRepository == null) {
+            throw new IllegalArgumentException("Parameter 'sessionRepository' can't be null");
+        }
+        this.userRepository = userRepository;
+        this.sessionRepository = sessionRepository;
+
     }
 
     private static boolean isLoginCorrect(String login) {
@@ -47,18 +60,20 @@ public class UserResource {
         if (!isPasswordCorrect(password))
             throw new ClientException(Status.BAD_REQUEST, "Password can not be empty");
 
-        final User user = repository.getByLogin(login);
+        final User user = userRepository.getByLogin(login);
         if (user == null)
             throw new ClientException(Status.UNAUTHORIZED, "User is not found");
         if (!user.checkPassword(password))
             throw new ClientException(Status.UNAUTHORIZED, "Password is not correct");
+
+
         //TODO: переделать null-проверку
 
         if (user.getToken() == null || user.getExpiration() == null || user.getExpiration().before(new Date())) {
             //TODO: класс для Token'a
             user.setToken(UserUtil.generateToken());
             user.setExpiration(UserUtil.computeExpiration(TimeUnit.DAYS, 1));
-            repository.createOrUpdate(user);
+            userRepository.createOrUpdate(user);
         }
         return Response.status(200).entity(new TokenOutput(user.getToken(), user.getExpiration())).build();
     }
@@ -72,11 +87,11 @@ public class UserResource {
             throw new ClientException(Status.BAD_REQUEST, "Login can not be empty");
         if (!isPasswordCorrect(password))
             throw new ClientException(Status.BAD_REQUEST, "Password can not be empty");
-        if (repository.getByLogin(login) != null)
+        if (userRepository.getByLogin(login) != null)
             throw new ClientException(Status.BAD_REQUEST, "Login is already taken");
 
         User user = new User(login, password);
-        repository.createOrUpdate(user);
+        userRepository.createOrUpdate(user);
         return Response.status(200).entity("User is registered. Your login: " + login).build();
     }
 

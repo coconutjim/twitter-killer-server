@@ -16,11 +16,8 @@ public class SessionService {
     //TODO: set default generator
     public SessionService() {
     }
-
     public SessionService(StringGenerator tokenGenerator) {
-        if (tokenGenerator == null)
-            throw new IllegalArgumentException("Parameter 'tokenGenerator' can't be null");
-        this.tokenGenerator = tokenGenerator;
+        setTokenGenerator(tokenGenerator);
     }
 
     /**
@@ -31,9 +28,19 @@ public class SessionService {
      */
     public SessionService(StringGenerator tokenGenerator, int tokenLifeTime) {
         this(tokenGenerator);
+        setTokenLifeTime(tokenLifeTime);
+    }
+
+    public void setTokenLifeTime(int tokenLifeTime) {
         if (tokenLifeTime < 0)
             throw new IllegalArgumentException("Parameter 'tokenLifeTime' can't be negative");
         this.tokenLifeTime = tokenLifeTime;
+    }
+
+    public void setTokenGenerator(StringGenerator tokenGenerator) {
+        if (tokenGenerator == null)
+            throw new IllegalArgumentException("Parameter 'tokenGenerator' can't be null");
+        this.tokenGenerator = tokenGenerator;
     }
 
     public SessionService setUser(User user) {
@@ -49,7 +56,6 @@ public class SessionService {
         calendar.add(Calendar.SECOND, tokenLifeTime);
         return calendar.getTime();
     }
-
 
     public Session build() {
         Session copy = null;
