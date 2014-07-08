@@ -37,13 +37,9 @@ public class UserUtil {
         return new BigInteger(130,new Random()).toString(16);
     }
 
-    public static String generateToken() {
-        return UUID.randomUUID().toString();
-    }
 
-    public static Date computeExpiration(TimeUnit unit, long duration) {
-        return new Date(new Date().getTime() + unit.toMillis(duration));
-    }
+
+
 
 
 
