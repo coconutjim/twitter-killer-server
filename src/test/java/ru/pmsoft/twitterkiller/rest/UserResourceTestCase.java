@@ -49,7 +49,7 @@ public class UserResourceTestCase {
     }
 
     @Test
-    public void login_ifPasswordIsNotCorrect_shouldThrowClientException_unit() throws GeneralSecurityException {
+    public void login_ifPasswordIsNotCorrect_shouldThrowClientException() throws GeneralSecurityException {
 
         final String password = "bar";
         final String login = "foo";

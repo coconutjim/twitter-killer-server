@@ -10,8 +10,6 @@ public class User implements Serializable {
     private String passwordHash;
     private String salt;
     private int id;
-    private String token;
-    private Date expiration;
 
     public User() {
     }
