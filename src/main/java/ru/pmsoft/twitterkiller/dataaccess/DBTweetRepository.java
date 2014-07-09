@@ -1,48 +1,47 @@
-package ru.pmsoft.twitterkiller.domain.dataaccess;
+package ru.pmsoft.twitterkiller.dataaccess;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import ru.pmsoft.twitterkiller.domain.entity.Twitt;
+import ru.pmsoft.twitterkiller.dataaccess.HibernateUtil;
+import ru.pmsoft.twitterkiller.domain.entity.Tweet;
 import ru.pmsoft.twitterkiller.domain.entity.User;
-import ru.pmsoft.twitterkiller.domain.repository.TwittRepository;
-import ru.pmsoft.twitterkiller.domain.util.HibernateUtil;
+import ru.pmsoft.twitterkiller.domain.repository.TweetRepository;
+
 
 import java.util.List;
 
-/**
- * Created by Anton on 05/07/2014.
- */
-public class DBTwittRepository implements TwittRepository {
+
+public class DBTweetRepository implements TweetRepository {
 
     @Override
-    public void save(Twitt twitt) {
+    public void save(Tweet tweet) {
 
         Session session = HibernateUtil.getSessionFactory().openSession();
 
         session.beginTransaction();
-        session.saveOrUpdate(twitt);
+        session.saveOrUpdate(tweet);
         session.getTransaction().commit();
         session.close();
     }
 
     @Override
-    public List<Twitt> getAllByLogin(String name) {
+    public List<Tweet> getAllByLogin(String name) {
 
         Session session = HibernateUtil.getSessionFactory().openSession();
 
         User ourUser  = ((List<User>) session.createQuery("select user from User user where user.login = '" + name + "'").list()).get(0);
 
-        List<Twitt> foundTwitt = (List<Twitt>) session.createCriteria(Twitt.class).add(Restrictions.eq("id_user", ourUser.getId())).list();
+        List<Tweet> foundTweet = (List<Tweet>) session.createCriteria(Tweet.class).add(Restrictions.eq("id_user", ourUser.getId())).list();
 
         session.close();
-        return foundTwitt;
+        return foundTweet;
     }
 
     @Override
-    public Iterable<Twitt> values() {
+    public Iterable<Tweet> values() {
 
         Session session = HibernateUtil.getSessionFactory().openSession();
-        List<Twitt> foundUsers = (List<Twitt>) session.createQuery("select user from User user").list();
+        List<Tweet> foundUsers = (List<Tweet>) session.createQuery("select user from User user").list();
      //   List<User> foundUsers = (List<User>) session.createCriteria(User.class).list();
         session.close();
         return foundUsers;

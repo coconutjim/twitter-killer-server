@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import ru.pmsoft.twitterkiller.domain.entity.User;
 import ru.pmsoft.twitterkiller.domain.factory.UserFactory;
 import ru.pmsoft.twitterkiller.domain.repository.SessionRepository;
+import ru.pmsoft.twitterkiller.domain.repository.TweetRepository;
 import ru.pmsoft.twitterkiller.domain.repository.UserRepository;
 import ru.pmsoft.twitterkiller.rest.exceptions.ClientException;
 import ru.pmsoft.twitterkiller.rest.exceptions.ExceptionBody;
@@ -19,15 +20,18 @@ import static org.testng.Assert.fail;
 
 public class UserResourceTestCase {
 
-    private static UserResource createSystemUnderTest(UserRepository repository, SessionRepository sessionRepository) {
-        return new UserResource(repository, sessionRepository);
+    private static UserResource createSystemUnderTest(UserRepository repository,
+                                                      SessionRepository sessionRepository,
+                                                      TweetRepository tweetRepository) {
+        return new UserResource(repository, sessionRepository,tweetRepository);
     }
 
     @Test(dataProvider = "invalidAuthenticationTestData")
     public void login_withInvalidArguments_shouldThrowClientException(
             String login, String password, ExceptionBody expected) throws GeneralSecurityException{
         UserRepository repositoryDummy = mock(UserRepository.class);
-        UserResource sut = createSystemUnderTest(repositoryDummy, mock(SessionRepository.class));
+        UserResource sut = createSystemUnderTest(repositoryDummy, mock(SessionRepository.class),
+                mock(TweetRepository.class));
 
         try {
             sut.login(login, password);
@@ -60,7 +64,8 @@ public class UserResourceTestCase {
         catch (GeneralSecurityException ex){}
         UserRepository repositoryStub = mock(UserRepository.class);
         when(repositoryStub.getByLogin(login)).thenReturn(user);
-        UserResource sut = createSystemUnderTest(repositoryStub, mock(SessionRepository.class));
+        UserResource sut = createSystemUnderTest(repositoryStub, mock(SessionRepository.class),
+                mock(TweetRepository.class));
 
         try {
             sut.login("foo", "bzr");
@@ -76,14 +81,15 @@ public class UserResourceTestCase {
             (String login, String password, ExceptionBody exceptionBody) throws GeneralSecurityException
     {
         UserRepository userRepository = mock(UserRepository.class);
-        UserResource sut = createSystemUnderTest(userRepository, mock(SessionRepository.class));
+        UserResource sut = createSystemUnderTest(userRepository, mock(SessionRepository.class),
+                mock(TweetRepository.class));
         try
         {
             sut.register(login, password);
         }
         catch (ClientException ex) {
             assertEquals(ex.getResponse().getEntity(), exceptionBody);
-             return;
+            return;
         }
         fail();
     }
@@ -101,7 +107,8 @@ public class UserResourceTestCase {
     public void register_ifLoginIsAlreadyTaken_shouldThrowClientException()throws GeneralSecurityException
     {
         UserRepository userRepository = mock(UserRepository.class);
-        UserResource sut = createSystemUnderTest(userRepository, mock(SessionRepository.class));
+        UserResource sut = createSystemUnderTest(userRepository, mock(SessionRepository.class),
+                mock(TweetRepository.class));
         String login = "foo";
         String password = "bar";
         User user = mock(User.class);
@@ -126,7 +133,8 @@ public class UserResourceTestCase {
     public void register_ok() throws GeneralSecurityException
     {
         UserRepository userRepository = mock(UserRepository.class);
-        UserResource sut = createSystemUnderTest(userRepository, mock(SessionRepository.class));
+        UserResource sut = createSystemUnderTest(userRepository, mock(SessionRepository.class),
+                mock(TweetRepository.class));
         Response resp = sut.register("foo", "bar");
         String s = (String)resp.getEntity();
         String arr[] = s.split("\"");

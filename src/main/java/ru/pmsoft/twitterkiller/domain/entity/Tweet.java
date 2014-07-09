@@ -2,16 +2,16 @@ package ru.pmsoft.twitterkiller.domain.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-
-public class Twitt implements Serializable{
+@SuppressWarnings("JpaObjectClassSignatureInspection")
+public class Tweet implements Serializable{
     private int id;
     private String twitt;
     private int id_user;
     private Date date;
 
-    private Twitt() { }
+    private Tweet() { }
 
-    public Twitt(int id_user, String twitt) {
+    public Tweet(int id_user, String twitt) {
         this.id_user = id_user;
         this.twitt = twitt;
         this.date = new Date(); //Потом дата сделать

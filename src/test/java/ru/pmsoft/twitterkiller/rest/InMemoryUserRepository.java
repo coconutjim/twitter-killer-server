@@ -1,6 +1,7 @@
-package ru.pmsoft.twitterkiller.domain.repository;
+package ru.pmsoft.twitterkiller.rest;
 
 import ru.pmsoft.twitterkiller.domain.entity.User;
+import ru.pmsoft.twitterkiller.domain.repository.UserRepository;
 
 import java.util.HashMap;
 
@@ -15,6 +16,11 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public User getByLogin(String login) {
         return users.get(login);
+    }
+
+    @Override
+    public User getById(int id) {
+        return null;
     }
 
     @Override

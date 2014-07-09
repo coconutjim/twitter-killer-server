@@ -39,4 +39,15 @@ public class UserFactory {
                 passwordEncrypter.encrypt(password + user.getSalt()));
     }
 
+    public static boolean isLoginCorrect(String login) {
+        return !(login == null || login.isEmpty());
+    }
+
+    public static boolean isPasswordCorrect(String password) {
+        return !(password == null || password.isEmpty());
+    }
+
+
+
+
 }

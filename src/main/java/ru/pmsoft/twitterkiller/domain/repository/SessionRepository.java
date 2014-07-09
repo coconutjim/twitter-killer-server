@@ -9,5 +9,7 @@ public interface SessionRepository {
 
     Session getByUser(User user);
 
+    Session getByToken(String token);
+
     void delete(Session session);
 }

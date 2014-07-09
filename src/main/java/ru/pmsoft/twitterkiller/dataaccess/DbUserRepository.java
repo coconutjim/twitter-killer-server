@@ -40,6 +40,21 @@ public class DbUserRepository implements UserRepository {
         return user;
     }
 
+    @Override
+    public User getById(int id){
+        Session session = null;
+        User user = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            user = (User) session.createCriteria(User.class).add(Restrictions.eq("id", id)).uniqueResult();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+        return user;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public Iterable<User> getAll() {

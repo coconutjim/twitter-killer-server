@@ -39,6 +39,22 @@ public class DbSessionRepository implements SessionRepository {
     }
 
     @Override
+    public Session getByToken(String token) {
+        org.hibernate.Session dbSession = null;
+        Session session = null;
+        try {
+            dbSession = HibernateUtil.getSessionFactory().openSession();
+            session = (Session) dbSession.createCriteria(Session.class)
+                    .add(Restrictions.eq("token", token)).uniqueResult();
+        } finally {
+            if (dbSession != null && dbSession.isOpen()) {
+                dbSession.close();
+            }
+        }
+        return session;
+    }
+
+    @Override
     public void delete(Session session) {
         org.hibernate.Session dbSession = null;
         try {
