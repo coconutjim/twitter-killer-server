@@ -1,7 +1,6 @@
 package ru.pmsoft.twitterkiller.domain.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import ru.pmsoft.twitterkiller.domain.util.JsonDateSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 
@@ -19,7 +18,7 @@ public class TokenOutput {
         return token;
     }
 
-    @JsonSerialize(using = JsonDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "YYYY-MM-DD'T'HH:mm:ss.SSSZ", timezone = "GMT+4")
     public Date getExpiration() {
         return expiration;
     }
