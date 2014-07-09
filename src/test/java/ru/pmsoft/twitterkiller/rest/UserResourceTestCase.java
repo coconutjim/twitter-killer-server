@@ -2,7 +2,6 @@ package ru.pmsoft.twitterkiller.rest;
 
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import ru.pmsoft.twitterkiller.domain.dto.TokenOutput;
 import ru.pmsoft.twitterkiller.domain.entity.User;
 import ru.pmsoft.twitterkiller.domain.factory.UserFactory;
 import ru.pmsoft.twitterkiller.domain.repository.SessionRepository;
@@ -36,7 +35,6 @@ public class UserResourceTestCase {
             assertEquals(ex.getResponse().getEntity(), expected);
             return;
         }
-
         fail();
     }
 
@@ -87,6 +85,7 @@ public class UserResourceTestCase {
             assertEquals(ex.getResponse().getEntity(), exceptionBody);
              return;
         }
+        fail();
     }
 
     @DataProvider
@@ -132,6 +131,5 @@ public class UserResourceTestCase {
         String s = (String)resp.getEntity();
         String arr[] = s.split("\"");
         assertEquals(arr[3], "foo");
-
     }
 }
