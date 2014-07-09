@@ -1,11 +1,15 @@
 package ru.pmsoft.twitterkiller.rest;
 
+import ru.pmsoft.twitterkiller.domain.dataaccess.DbUserRepository;
 import ru.pmsoft.twitterkiller.domain.dto.TokenOutput;
+import ru.pmsoft.twitterkiller.domain.dto.TwitOutput;
 import ru.pmsoft.twitterkiller.domain.entity.Session;
+import ru.pmsoft.twitterkiller.domain.entity.Twitt;
 import ru.pmsoft.twitterkiller.domain.entity.User;
 import ru.pmsoft.twitterkiller.domain.factory.SessionFactory;
 import ru.pmsoft.twitterkiller.domain.factory.UserFactory;
 import ru.pmsoft.twitterkiller.domain.repository.SessionRepository;
+import ru.pmsoft.twitterkiller.domain.repository.TwittRepository;
 import ru.pmsoft.twitterkiller.domain.repository.UserRepository;
 import ru.pmsoft.twitterkiller.rest.exceptions.ClientException;
 
@@ -13,6 +17,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.security.GeneralSecurityException;
+import java.util.List;
 
 import static javax.ws.rs.core.Response.Status;
 
@@ -23,6 +28,10 @@ public class UserResource {
     private SessionRepository sessionRepository;
     private UserFactory userFactory;
     private SessionFactory sessionFactory;
+
+    
+    static private TwittRepository repositoryTwitt;
+
 
     @Inject
     public UserResource(UserRepository userRepository,
@@ -35,17 +44,14 @@ public class UserResource {
         }
         this.userRepository = userRepository;
         this.sessionRepository = sessionRepository;
+        UserResource.repositoryTwitt = repositoryTwitt;
         userFactory = new UserFactory();
-        sessionFactory = new SessionFactory();
+        sessionFactory = new SessionFactory();        
     }
 
-    private static boolean isLoginCorrect(String login) {
-        return !(login == null || login.isEmpty());
-    }
+    
 
-    private static boolean isPasswordCorrect(String password) {
-        return !(password == null || password.isEmpty());
-    }
+   
 
     @POST
     @Produces("application/json")
@@ -93,11 +99,58 @@ public class UserResource {
         return Response.status(200).entity("{\"login\":" + "\"" + login + "\"}").build();
     }
 
+    @POST
+    @Path("/twitt/add")
+    @Produces("application/json")
+    public Response addTwitt(@HeaderParam("login") String login, @HeaderParam("twitt") String text) {
+
+        if (!isLoginCorrect(login))
+            throw new ClientException(Status.BAD_REQUEST, "Login can not be empty");
+        if (!isTwittCorrect(text))
+            throw new ClientException(Status.BAD_REQUEST, "Twitt can not be empty or less than 140 letters");
+
+        final User user = userRepository.getByLogin(login);
+        Session session = sessionRepository.getByUser(user);
+        if (session == null || session.isExpired())
+            throw new ClientException(Status.UNAUTHORIZED, "Your token is expired or does not exist");
+
+        int id_user = user.getId();
+
+        Twitt twitt = new Twitt(id_user, text);
+        repositoryTwitt.save(twitt);
+        return Response.status(200).entity("Twitt is saved").build();
+    }
 
     @GET
-    @Path("/error/")
+    @Path("/twitt/all")
     @Produces("application/json")
-    public Response getError() throws Exception {
-        throw new Exception();
+    public Response allTwitts(@HeaderParam("login") String login) {
+
+        if (!isLoginCorrect(login))
+            throw new ClientException(Status.BAD_REQUEST, "Login can not be empty");
+
+        final User user = userRepository.getByLogin(login);
+
+        Session session = sessionRepository.getByUser(user);
+        if (session != null && session.isExpired())
+            throw new ClientException(Status.UNAUTHORIZED, "Your token is expired or does not exist");
+
+        List<Twitt> allTwitts = repositoryTwitt.getAllByLogin(login);
+        return Response.status(200).entity(new TwitOutput(login, allTwitts)).build();
     }
+
+    private static boolean isLoginCorrect(String login) {
+        return !(login == null || login.isEmpty());
+    }
+
+    private static boolean isPasswordCorrect(String password) {
+        return !(password == null || password.isEmpty());
+    }
+
+    
+
+    private static boolean isTwittCorrect(String twitt) {
+        return !(twitt == null || twitt.isEmpty() || twitt.trim().isEmpty() || twitt.trim().length() > 140);
+    }
+
 }
