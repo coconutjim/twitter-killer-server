@@ -2,6 +2,7 @@ package ru.pmsoft.twitterkiller.rest;
 
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import ru.pmsoft.twitterkiller.domain.dto.TokenOutput;
 import ru.pmsoft.twitterkiller.domain.entity.User;
 import ru.pmsoft.twitterkiller.domain.factory.UserFactory;
 import ru.pmsoft.twitterkiller.domain.repository.SessionRepository;
@@ -9,6 +10,7 @@ import ru.pmsoft.twitterkiller.domain.repository.UserRepository;
 import ru.pmsoft.twitterkiller.rest.exceptions.ClientException;
 import ru.pmsoft.twitterkiller.rest.exceptions.ExceptionBody;
 
+import javax.ws.rs.core.Response;
 import java.security.GeneralSecurityException;
 
 import static org.mockito.Mockito.mock;
@@ -18,8 +20,7 @@ import static org.testng.Assert.fail;
 
 public class UserResourceTestCase {
 
-    private static UserResource createSystemUnderTest(UserRepository repository) {
-        SessionRepository sessionRepository = mock(SessionRepository.class);
+    private static UserResource createSystemUnderTest(UserRepository repository, SessionRepository sessionRepository) {
         return new UserResource(repository, sessionRepository);
     }
 
@@ -27,7 +28,7 @@ public class UserResourceTestCase {
     public void login_withInvalidArguments_shouldThrowClientException(
             String login, String password, ExceptionBody expected) throws GeneralSecurityException{
         UserRepository repositoryDummy = mock(UserRepository.class);
-        UserResource sut = createSystemUnderTest(repositoryDummy);
+        UserResource sut = createSystemUnderTest(repositoryDummy, mock(SessionRepository.class));
 
         try {
             sut.login(login, password);
@@ -61,7 +62,7 @@ public class UserResourceTestCase {
         catch (GeneralSecurityException ex){}
         UserRepository repositoryStub = mock(UserRepository.class);
         when(repositoryStub.getByLogin(login)).thenReturn(user);
-        UserResource sut = createSystemUnderTest(repositoryStub);
+        UserResource sut = createSystemUnderTest(repositoryStub, mock(SessionRepository.class));
 
         try {
             sut.login("foo", "bzr");
@@ -77,7 +78,7 @@ public class UserResourceTestCase {
             (String login, String password, ExceptionBody exceptionBody) throws GeneralSecurityException
     {
         UserRepository userRepository = mock(UserRepository.class);
-        UserResource sut = createSystemUnderTest(userRepository);
+        UserResource sut = createSystemUnderTest(userRepository, mock(SessionRepository.class));
         try
         {
             sut.register(login, password);
@@ -101,7 +102,7 @@ public class UserResourceTestCase {
     public void register_ifLoginIsAlreadyTaken_shouldThrowClientException()throws GeneralSecurityException
     {
         UserRepository userRepository = mock(UserRepository.class);
-        UserResource sut = createSystemUnderTest(userRepository);
+        UserResource sut = createSystemUnderTest(userRepository, mock(SessionRepository.class));
         String login = "foo";
         String password = "bar";
         User user = mock(User.class);
@@ -120,12 +121,17 @@ public class UserResourceTestCase {
                 new ExceptionBody("Login is already taken"));
             return;
         }
+        fail();
     }
     @Test
     public void register_ok() throws GeneralSecurityException
     {
         UserRepository userRepository = mock(UserRepository.class);
-        UserResource sut = createSystemUnderTest(userRepository);
-        sut.register("foo", "bar");
+        UserResource sut = createSystemUnderTest(userRepository, mock(SessionRepository.class));
+        Response resp = sut.register("foo", "bar");
+        String s = (String)resp.getEntity();
+        String arr[] = s.split("\"");
+        assertEquals(arr[3], "foo");
+
     }
 }
