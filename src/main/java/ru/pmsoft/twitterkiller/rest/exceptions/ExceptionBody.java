@@ -13,4 +13,18 @@ public class ExceptionBody {
     public String getMessage() {
         return message;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj==null)
+            return false;
+        if (!(obj instanceof ExceptionBody))
+            return false;
+        return hashCode() == obj.hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return message.hashCode();
+    }
 }
