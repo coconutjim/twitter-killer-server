@@ -18,9 +18,8 @@ public class DbUserRepository implements UserRepository {
             session.saveOrUpdate(user);
             session.getTransaction().commit();
         } finally {
-            if (session != null && session.isOpen()) {
+            if (session != null && session.isOpen())
                 session.close();
-            }
         }
     }
 
@@ -33,9 +32,8 @@ public class DbUserRepository implements UserRepository {
             session = HibernateUtil.getSessionFactory().openSession();
             user = (User) session.createCriteria(User.class).add(Restrictions.eq("login", login)).uniqueResult();
         } finally {
-            if (session != null && session.isOpen()) {
+            if (session != null && session.isOpen())
                 session.close();
-            }
         }
         return user;
     }
@@ -48,9 +46,8 @@ public class DbUserRepository implements UserRepository {
             session = HibernateUtil.getSessionFactory().openSession();
             user = (User) session.createCriteria(User.class).add(Restrictions.eq("id", id)).uniqueResult();
         } finally {
-            if (session != null && session.isOpen()) {
+            if (session != null && session.isOpen())
                 session.close();
-            }
         }
         return user;
     }
@@ -64,9 +61,8 @@ public class DbUserRepository implements UserRepository {
             session = HibernateUtil.getSessionFactory().openSession();
             foundUsers = (List<User>) session.createCriteria(User.class).list();
         } finally {
-            if (session != null && session.isOpen()) {
+            if (session != null && session.isOpen())
                 session.close();
-            }
         }
         return foundUsers;
     }

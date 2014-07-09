@@ -16,9 +16,8 @@ public class DbSessionRepository implements SessionRepository {
             dbSession.saveOrUpdate(session);
             dbSession.getTransaction().commit();
         } finally {
-            if (dbSession != null && dbSession.isOpen()) {
+            if (dbSession != null && dbSession.isOpen())
                 dbSession.close();
-            }
         }
     }
 
@@ -31,9 +30,8 @@ public class DbSessionRepository implements SessionRepository {
             session = (Session) dbSession.createCriteria(Session.class)
                     .add(Restrictions.eq("userId", user.getId())).uniqueResult();
         } finally {
-            if (dbSession != null && dbSession.isOpen()) {
+            if (dbSession != null && dbSession.isOpen())
                 dbSession.close();
-            }
         }
         return session;
     }
@@ -47,9 +45,8 @@ public class DbSessionRepository implements SessionRepository {
             session = (Session) dbSession.createCriteria(Session.class)
                     .add(Restrictions.eq("token", token)).uniqueResult();
         } finally {
-            if (dbSession != null && dbSession.isOpen()) {
+            if (dbSession != null && dbSession.isOpen())
                 dbSession.close();
-            }
         }
         return session;
     }
@@ -63,9 +60,8 @@ public class DbSessionRepository implements SessionRepository {
             dbSession.delete(session);
             dbSession.getTransaction().commit();
         } finally {
-            if (dbSession != null && dbSession.isOpen()) {
+            if (dbSession != null && dbSession.isOpen())
                 dbSession.close();
-            }
         }
     }
 }

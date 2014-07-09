@@ -5,15 +5,15 @@ import java.util.Date;
 @SuppressWarnings("JpaObjectClassSignatureInspection")
 public class Tweet implements Serializable{
     private int id;
-    private String twitt;
+    private String tweet;
     private int id_user;
     private Date date;
 
     private Tweet() { }
 
-    public Tweet(int id_user, String twitt) {
+    public Tweet(int id_user, String tweet) {
         this.id_user = id_user;
-        this.twitt = twitt;
+        this.tweet = tweet;
         this.date = new Date(); //Потом дата сделать
     }
 
@@ -25,12 +25,12 @@ public class Tweet implements Serializable{
         this.id = id;
     }
 
-    public String getTwitt() {
-        return twitt;
+    public String getTweet() {
+        return tweet;
     }
 
-    public void setTwitt(String twitt) {
-        this.twitt = twitt;
+    public void setTweet(String twitt) {
+        this.tweet = twitt;
     }
 
     public int getId_user() {

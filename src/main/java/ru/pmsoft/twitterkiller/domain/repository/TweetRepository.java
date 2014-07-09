@@ -10,5 +10,5 @@ import java.util.List;
 public interface TweetRepository {
     void save(Tweet tweet);
     List<Tweet> getAllByLogin(String name);
-    Iterable<Tweet> values();
+    public Tweet getAllById(int tweetId);
 }

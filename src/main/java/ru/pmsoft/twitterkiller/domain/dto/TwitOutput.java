@@ -7,13 +7,13 @@ import java.util.List;
 
 public class TwitOutput {
 
-    private List<Tweet> allTweets;
+    private List<Tweet> tweets;
 
-    public TwitOutput(List<Tweet> allTweets) {
-        this.allTweets = allTweets;
+    public TwitOutput(List<Tweet> tweets) {
+        this.tweets = tweets;
     }
 
-    public List<Tweet> getAllTweets() {
-        return allTweets;
+    public List<Tweet> getTweets() {
+        return tweets;
     }
 }

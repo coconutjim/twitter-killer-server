@@ -16,34 +16,50 @@ public class DBTweetRepository implements TweetRepository {
     @Override
     public void save(Tweet tweet) {
 
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
 
-        session.beginTransaction();
-        session.saveOrUpdate(tweet);
-        session.getTransaction().commit();
-        session.close();
+            session.beginTransaction();
+            session.saveOrUpdate(tweet);
+            session.getTransaction().commit();
+        } finally {
+            if(session != null && session.isOpen())
+            session.close();
+        }
     }
 
     @Override
     public List<Tweet> getAllByLogin(String name) {
+        Session session = null;
+        List<Tweet> foundTweet = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
 
-        Session session = HibernateUtil.getSessionFactory().openSession();
+            User ourUser = ((List<User>) session.createQuery("select user from User user where user.login = '" + name + "'").list()).get(0);
 
-        User ourUser  = ((List<User>) session.createQuery("select user from User user where user.login = '" + name + "'").list()).get(0);
+            foundTweet = (List<Tweet>) session.createCriteria(Tweet.class).add(Restrictions.eq("id_user", ourUser.getId())).list();
 
-        List<Tweet> foundTweet = (List<Tweet>) session.createCriteria(Tweet.class).add(Restrictions.eq("id_user", ourUser.getId())).list();
-
-        session.close();
+        } finally {
+            if(session != null && session.isOpen())
+                session.close();
+        }
         return foundTweet;
     }
 
     @Override
-    public Iterable<Tweet> values() {
+    public Tweet getAllById(int tweetId) {
+        Session session = null;
+        Tweet foundTweet = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
 
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        List<Tweet> foundUsers = (List<Tweet>) session.createQuery("select user from User user").list();
-     //   List<User> foundUsers = (List<User>) session.createCriteria(User.class).list();
-        session.close();
-        return foundUsers;
+            foundTweet = (Tweet) session.createCriteria(Tweet.class).add(Restrictions.eq("id", tweetId)).list().get(0);
+
+        } finally {
+            if(session != null && session.isOpen())
+                session.close();
+        }
+        return foundTweet;
     }
 }

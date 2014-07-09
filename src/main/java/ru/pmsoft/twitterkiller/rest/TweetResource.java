@@ -55,7 +55,7 @@ public class TweetResource {
 
         int id_user = user.getId();
 
-       Tweet tweet = new Tweet(id_user, text);
+        Tweet tweet = new Tweet(id_user, text);
         repositoryTweet.save(tweet);
         return Response.status(200).entity("Tweet is saved").build();
     }
