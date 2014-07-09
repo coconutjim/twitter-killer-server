@@ -5,11 +5,11 @@ import ru.pmsoft.twitterkiller.domain.entity.Tweet;
 import java.util.List;
 
 
-public class TwitOutput {
+public class TweetOutput {
 
     private List<Tweet> tweets;
 
-    public TwitOutput(List<Tweet> tweets) {
+    public TweetOutput(List<Tweet> tweets) {
         this.tweets = tweets;
     }
 

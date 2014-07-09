@@ -14,7 +14,7 @@ import java.util.List;
 public class DBTweetRepository implements TweetRepository {
 
     @Override
-    public void save(Tweet tweet) {
+    public void createOrUpdate(Tweet tweet) {
 
         Session session = null;
         try {
@@ -48,7 +48,7 @@ public class DBTweetRepository implements TweetRepository {
     }
 
     @Override
-    public Tweet getAllById(int tweetId) {
+    public Tweet getById(int tweetId) {
         Session session = null;
         Tweet foundTweet = null;
         try {

@@ -1,6 +1,6 @@
 package ru.pmsoft.twitterkiller.rest;
 
-import ru.pmsoft.twitterkiller.domain.dto.TwitOutput;
+import ru.pmsoft.twitterkiller.domain.dto.TweetOutput;
 import ru.pmsoft.twitterkiller.domain.entity.Session;
 import ru.pmsoft.twitterkiller.domain.entity.Tweet;
 import ru.pmsoft.twitterkiller.domain.entity.User;
@@ -56,7 +56,7 @@ public class TweetResource {
         int id_user = user.getId();
 
         Tweet tweet = new Tweet(id_user, text);
-        repositoryTweet.save(tweet);
+        repositoryTweet.createOrUpdate(tweet);
         return Response.status(200).entity("Tweet is saved").build();
     }
 
@@ -68,11 +68,22 @@ public class TweetResource {
         if (!UserFactory.isLoginCorrect(username))
             throw new ClientException(Response.Status.BAD_REQUEST, "Login can not be empty");
         Session session = sessionRepository.getByToken(token);
-        if (session != null && session.isExpired())
+        if (session == null || session.isExpired())
             throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is expired or does not exist");
 
         List<Tweet> Tweets = repositoryTweet.getAllByLogin(username);
-        return Response.status(200).entity(new TwitOutput(Tweets)).build();
+        return Response.status(200).entity(new TweetOutput(Tweets)).build();
+    }
+
+    @GET
+    @Path("/{id:^[0-9]*$}")
+    @Produces("application/json")
+    public Response getTweet(@HeaderParam("token") String token, @PathParam("id") int tweetId){
+        Session session = sessionRepository.getByToken(token);
+        if(session == null || session.isExpired())
+            throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is expired or does not exist");
+        Tweet tweet = repositoryTweet.getById(tweetId);
+        return Response.status(200).entity(tweet).build();
     }
 
 

@@ -8,7 +8,7 @@ import java.util.List;
  * Created by Anton on 07/07/2014.
  */
 public interface TweetRepository {
-    void save(Tweet tweet);
+    void createOrUpdate(Tweet tweet);
     List<Tweet> getAllByLogin(String name);
-    public Tweet getAllById(int tweetId);
+    public Tweet getById(int tweetId);
 }
