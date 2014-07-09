@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="ru.pmsoft.twitterkiller.domain.entity.Twitt"  table="twitts">
+        <id name="id" type="java.lang.Integer">
+            <column name="ID" />
+            <generator class="increment" />
+        </id>
+        <property name="twitt" type="text">
+            <column name="TWIT" length="20" not-null="true" unique="true" />
+        </property>
+        <property name="id_user" type="int">
+            <column name="ID_USER" length="20" not-null="true" unique="true" />
+        </property>
+        <property name="date" type="java.util.Date">
+            <column name="DATE" length="20" not-null="true" unique="true" />
+        </property>
+    </class>
+</hibernate-mapping>
