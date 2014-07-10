@@ -84,7 +84,7 @@ public class TweetResource {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{id:^[0-9]*$}")
     @Produces("application/json")
     public Response getTweet(@HeaderParam("token") String token, @PathParam("id") int tweetId) {
         if (!isTokenCorrect(token))

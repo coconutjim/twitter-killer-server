@@ -6,10 +6,10 @@ import java.io.Serializable;
 import java.util.Date;
 @SuppressWarnings("JpaObjectClassSignatureInspection")
 public class Tweet implements Serializable{
-    private String id;
+    private int id;
     private String tweet;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "YYYY-MM-dd'T'HH:mm:ss.SSSZ", timezone = "GMT+4")
     private int id_user;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "YYYY-MM-dd'T'HH:mm:ssZ", timezone = "GMT+4")
     private Date date;
 
     private Tweet() { }
@@ -20,11 +20,11 @@ public class Tweet implements Serializable{
         this.date = new Date(); //Потом дата сделать
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
