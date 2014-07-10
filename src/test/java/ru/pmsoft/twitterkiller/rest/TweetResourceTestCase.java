@@ -31,16 +31,16 @@ public class TweetResourceTestCase {
     private static TweetResource createSystemUnderTest(UserRepository repository,
                                                       SessionRepository sessionRepository,
                                                       TweetRepository tweetRepository) {
-        return new TweetResource(repository, sessionRepository,tweetRepository);
+        return new TweetResource(repository==null ? mock(UserRepository.class) : repository,
+                sessionRepository == null ? mock(SessionRepository.class) : sessionRepository,
+                tweetRepository == null ? mock(TweetRepository.class) : tweetRepository);
     }
 
     @Test (dataProvider = "invalidDataSourceForAddTweet")
     public void addTweet_whenTextOfTweetIsNullOrEmpty_shouldThrowClientException(String token, String text) {
-        TweetResource sut = createSystemUnderTest(mock(UserRepository.class),
-                                                  mock(SessionRepository.class),
-                                                  mock(TweetRepository.class));
+        TweetResource sut = createSystemUnderTest(null, null, null);
         try{
-             sut.addTweet("foo", null);
+             sut.addTweet(token, text);
         }
         catch (ClientException ex)
         {
@@ -58,18 +58,13 @@ public class TweetResourceTestCase {
                 {
                   new Object[]{"foo", null},
                         new Object[]{"foo", "             "},
-                        new Object[]{"foo", "barbarbarbarbarbarbarbarbarbarba" +
-                                "rbarbarbarbarvbarbarbarbarbarbarbarbarbarbarbarbarba" +
-                                "rbarbarbarbarbarbarbarbarbarbarbarbarbarbarbarbarbarbarb" +
-                                "arbarbarbarbarbarbarbarbarbarbarbarbarbarbarbarbarbarbarba" +
-                                "rbarbarbarbarbarbarbarbarbarbarbarbarbarbarbarbarbarbarbarbar" +
-                                "barbarbarbarbarbarbarbar"}
+                        new Object[]{"foo", createLongString()}
                 };
     }
 
 
     @Test
-    public void addTweet_OK()
+    public void addTweet_shouldWorkWell()
     {
         SessionRepository sessionRepository =  mock(SessionRepository.class);
         UserRepository userRepository = mock(UserRepository.class);
@@ -83,7 +78,7 @@ public class TweetResourceTestCase {
         TweetResource sut = createSystemUnderTest
                 (userRepository,
                 sessionRepository,
-                mock(TweetRepository.class));
+                null);
 
         Response response = sut.addTweet("foo", "bar");
         assertEquals((String)response.getEntity(), "Tweet is saved");
@@ -93,8 +88,8 @@ public class TweetResourceTestCase {
     @Test
     public void allTweets_whenUsernameIsEmpty_shouldThrowClientException() {
         TweetResource sut = createSystemUnderTest(mock(UserRepository.class),
-                        mock(SessionRepository.class),
-                        mock(TweetRepository.class));
+                        null,
+                        null);
         try {
             sut.allTweets("foo", "");
         }
@@ -112,9 +107,9 @@ public class TweetResourceTestCase {
         UserSession session = mock(UserSession.class);
         when((sessionRepository.getByToken(any(String.class)))).thenReturn(session);
         when(session.isExpired()).thenReturn(true);
-        TweetResource sut = createSystemUnderTest(mock(UserRepository.class),
+        TweetResource sut = createSystemUnderTest(null,
                 sessionRepository,
-                mock(TweetRepository.class));
+                null);
 
         try{
             switch(method)
@@ -139,9 +134,9 @@ public class TweetResourceTestCase {
         SessionRepository sessionRepository =  mock(SessionRepository.class);
         UserSession session = null;
         when((sessionRepository.getByToken(any(String.class)))).thenReturn(session);
-        TweetResource sut = createSystemUnderTest(mock(UserRepository.class),
+        TweetResource sut = createSystemUnderTest(null,
                 sessionRepository,
-                mock(TweetRepository.class));
+                null);
 
         try{
             switch(method)
@@ -162,7 +157,7 @@ public class TweetResourceTestCase {
 
 
     @Test
-    public void allTweets_OK()
+    public void allTweets_shouldWorkWell()
     {
         List<Tweet> alltweets = new ArrayList<Tweet>();
         alltweets.add(new Tweet(0, "foo"));
@@ -173,7 +168,7 @@ public class TweetResourceTestCase {
         when((sessionRepository.getByToken(any(String.class)))).thenReturn(session);
         when(session.isExpired()).thenReturn(false);
         when(tweetRepository.getAllByLogin(anyString())).thenReturn(alltweets);
-        TweetResource sut = createSystemUnderTest(mock(UserRepository.class),
+        TweetResource sut = createSystemUnderTest(null,
                 sessionRepository,
                 tweetRepository);
 
@@ -183,7 +178,7 @@ public class TweetResourceTestCase {
     }
 
     @Test
-    public void getTweet_OK() {
+    public void getTweet_shouldWorkWell() {
 
         SessionRepository sessionRepository =  mock(SessionRepository.class);
         UserSession session = mock(UserSession.class);
@@ -192,15 +187,13 @@ public class TweetResourceTestCase {
         TweetRepository tweetRepository = mock(TweetRepository.class);
         Tweet tweet = new Tweet(0, "bar");
         when(tweetRepository.getById(anyInt())).thenReturn(tweet);
-        TweetResource sut = createSystemUnderTest(mock(UserRepository.class),
+        TweetResource sut = createSystemUnderTest(null,
                 sessionRepository,
                 tweetRepository);
 
         Response response = sut.getTweet("foo", 0);
         assertEquals(response.getEntity(), tweet);
     }
-
-
 
   @DataProvider
     private Object[][] InvalidReturnForDifferentTesting()
@@ -211,4 +204,12 @@ public class TweetResourceTestCase {
               new Object[]{"addTweet"}
       };
   }
+
+    private static String createLongString()
+    {
+        String s = "";
+        for (int i = 0; i< 150; i++)
+            s = s+"1";
+        return s;
+    }
 }
