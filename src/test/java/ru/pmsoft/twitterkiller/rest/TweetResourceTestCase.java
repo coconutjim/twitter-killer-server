@@ -23,7 +23,6 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
-
 import static org.mockito.Mockito.mock;
 
 public class TweetResourceTestCase {

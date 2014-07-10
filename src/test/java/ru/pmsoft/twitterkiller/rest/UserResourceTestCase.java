@@ -3,15 +3,20 @@ package ru.pmsoft.twitterkiller.rest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import ru.pmsoft.twitterkiller.domain.entity.User;
+import ru.pmsoft.twitterkiller.domain.factory.SessionFactory;
 import ru.pmsoft.twitterkiller.domain.factory.UserFactory;
 import ru.pmsoft.twitterkiller.domain.repository.SessionRepository;
 import ru.pmsoft.twitterkiller.domain.repository.UserRepository;
+import ru.pmsoft.twitterkiller.domain.util.PasswordEncrypter;
+import ru.pmsoft.twitterkiller.domain.util.StringGenerator;
 import ru.pmsoft.twitterkiller.rest.exceptions.ClientException;
 import ru.pmsoft.twitterkiller.rest.exceptions.ExceptionBody;
 
 import javax.ws.rs.core.Response;
 import java.security.GeneralSecurityException;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
@@ -20,15 +25,19 @@ import static org.testng.Assert.fail;
 public class UserResourceTestCase {
 
     private static UserResource createSystemUnderTest(UserRepository repository,
-                                                      SessionRepository sessionRepository) {
+                                                      SessionRepository sessionRepository,
+                                                      UserFactory userFactory,
+                                                      SessionFactory sessionFactory) {
         return new UserResource(repository==null ? mock(UserRepository.class) : repository,
-                                sessionRepository == null ? mock(SessionRepository.class) : sessionRepository);
+                                sessionRepository == null ? mock(SessionRepository.class) : sessionRepository,
+                                userFactory == null ? mock(UserFactory.class) : userFactory,
+                                sessionFactory == null ? mock(SessionFactory.class) : sessionFactory);
     }
 
     @Test(dataProvider = "invalidAuthenticationTestData")
     public void login_withInvalidArguments_shouldThrowClientException(
             String login, String password, ExceptionBody expected) throws GeneralSecurityException{
-        UserResource sut = createSystemUnderTest(null, null);
+        UserResource sut = createSystemUnderTest(null, null, null, null);
 
         try {
             sut.login(login, password);
@@ -53,11 +62,13 @@ public class UserResourceTestCase {
 
         final String password = "bar";
         final String login = "foo";
-        UserFactory userFactoryStub = new UserFactory();
+        UserFactory userFactoryStub = mock(UserFactory.class);
+        when(userFactoryStub.create(any(String.class), any(String.class))).thenReturn(new User(login));
         User user  = userFactoryStub.create(login, password);
+        user.setPasswordHash(password);
         UserRepository repositoryStub = mock(UserRepository.class);
         when(repositoryStub.getByLogin(login)).thenReturn(user);
-        UserResource sut = createSystemUnderTest(repositoryStub, null);
+        UserResource sut = createSystemUnderTest(repositoryStub, null, userFactoryStub, null);
 
         try {
             sut.login("foo", "bzr");
@@ -72,7 +83,7 @@ public class UserResourceTestCase {
     public void register_withInvalidArguments_shouldThrowClientException
             (String login, String password, ExceptionBody exceptionBody) throws GeneralSecurityException
     {
-        UserResource sut = createSystemUnderTest(null, null);
+        UserResource sut = createSystemUnderTest(null, null, null, null);
         try
         {
             sut.register(login, password);
@@ -97,11 +108,11 @@ public class UserResourceTestCase {
     public void register_ifLoginIsAlreadyTaken_shouldThrowClientException()throws GeneralSecurityException
     {
         UserRepository userRepository = mock(UserRepository.class);
-        UserResource sut = createSystemUnderTest(userRepository, null);
+        UserResource sut = createSystemUnderTest(userRepository, null, null, null);
         String login = "foo";
         String password = "bar";
         User user = mock(User.class);
-        user = new UserFactory().create(login, password);
+        user = new UserFactory(mock(StringGenerator.class), mock(PasswordEncrypter.class)).create(login, password);
         when(userRepository.getByLogin(login)).thenReturn(user);
         try
         {
@@ -117,7 +128,7 @@ public class UserResourceTestCase {
     @Test
     public void register_thisTestWorksWell() throws GeneralSecurityException
     {
-        UserResource sut = createSystemUnderTest(null,null);
+        UserResource sut = createSystemUnderTest(null,null, null, null);
         Response resp = sut.register("foo", "bar");
         String s = (String)resp.getEntity();
         String arr[] = s.split("\"");
