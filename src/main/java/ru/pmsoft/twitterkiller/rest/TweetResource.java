@@ -42,6 +42,10 @@ public class TweetResource {
         return !(tweet == null || tweet.isEmpty() || tweet.trim().isEmpty() || tweet.trim().length() > 140);
     }
 
+    private static boolean isTokenCorrect(String token){
+        return !(token == null || token.trim().isEmpty());
+    }
+
     @POST
     @Path("/add")
     @Produces("application/json")
@@ -50,7 +54,8 @@ public class TweetResource {
 
         if (!isTweetCorrect(text))
             throw new ClientException(Response.Status.BAD_REQUEST, "Tweet can not be empty or less than 140 letters");
-
+        if (!isTokenCorrect(token))
+            throw new ClientException(Response.Status.BAD_REQUEST,"Token was empty");
 
         UserSession userSession = sessionRepository.getByToken(token);
         if (userSession == null || userSession.isExpired())
@@ -70,6 +75,8 @@ public class TweetResource {
 
         if (!UserFactory.isLoginCorrect(username))
             throw new ClientException(Response.Status.BAD_REQUEST, "Login can not be empty");
+        if (!isTokenCorrect(token))
+            throw new ClientException(Response.Status.BAD_REQUEST,"Token was empty");
         UserSession userSession = sessionRepository.getByToken(token);
         if (userSession == null || userSession.isExpired())
             throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is expired or does not exist");
@@ -82,6 +89,8 @@ public class TweetResource {
     @Path("/{id}")
     @Produces("application/json")
     public Response getTweet(@HeaderParam("token") String token, @PathParam("id") String tweetId) {
+        if (!isTokenCorrect(token))
+            throw new ClientException(Response.Status.BAD_REQUEST,"Token was empty");
         UserSession userSession = sessionRepository.getByToken(token);
         if (userSession == null || userSession.isExpired())
             throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is expired or does not exist");
