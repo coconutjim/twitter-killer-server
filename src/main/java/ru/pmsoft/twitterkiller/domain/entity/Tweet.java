@@ -1,5 +1,7 @@
 package ru.pmsoft.twitterkiller.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 @SuppressWarnings("JpaObjectClassSignatureInspection")
@@ -7,6 +9,7 @@ public class Tweet implements Serializable{
     private int id;
     private String tweet;
     private int id_user;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "YYYY-MM-DD'T'HH:mm:ss.SSSZ", timezone = "GMT+4")
     private Date date;
 
     private Tweet() { }
@@ -29,8 +32,8 @@ public class Tweet implements Serializable{
         return tweet;
     }
 
-    public void setTweet(String twitt) {
-        this.tweet = twitt;
+    public void setTweet(String tweet) {
+        this.tweet = tweet;
     }
 
     public int getId_user() {

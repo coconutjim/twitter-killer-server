@@ -1,7 +1,7 @@
 package ru.pmsoft.twitterkiller.domain.factory;
 
-import ru.pmsoft.twitterkiller.domain.entity.Session;
 import ru.pmsoft.twitterkiller.domain.entity.User;
+import ru.pmsoft.twitterkiller.domain.entity.UserSession;
 import ru.pmsoft.twitterkiller.domain.util.TokenGenerator;
 import ru.pmsoft.twitterkiller.domain.util.UUIDGenerator;
 
@@ -34,8 +34,8 @@ public class SessionFactory {
         this.tokenLifeTime = tokenLifeTime;
     }
 
-    public Session create(User user) {
-        Session session = new Session(tokenGenerator.generate(), computeExpiration(), user.getId());
-        return session;
+    public UserSession create(User user) {
+        UserSession userSession = new UserSession(tokenGenerator.generate(), computeExpiration(), user.getId());
+        return userSession;
     }
 }

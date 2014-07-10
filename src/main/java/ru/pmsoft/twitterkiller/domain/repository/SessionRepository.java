@@ -1,15 +1,15 @@
 package ru.pmsoft.twitterkiller.domain.repository;
 
-import ru.pmsoft.twitterkiller.domain.entity.Session;
 import ru.pmsoft.twitterkiller.domain.entity.User;
+import ru.pmsoft.twitterkiller.domain.entity.UserSession;
 
 
 public interface SessionRepository {
-    void create(Session session);
+    void create(UserSession userSession);
 
-    Session getByUser(User user);
+    UserSession getByUser(User user);
 
-    Session getByToken(String token);
+    UserSession getByToken(String token);
 
-    void delete(Session session);
+    void delete(UserSession userSession);
 }

@@ -1,8 +1,8 @@
 package ru.pmsoft.twitterkiller.rest;
 
 import ru.pmsoft.twitterkiller.domain.dto.TokenOutput;
-import ru.pmsoft.twitterkiller.domain.entity.Session;
 import ru.pmsoft.twitterkiller.domain.entity.User;
+import ru.pmsoft.twitterkiller.domain.entity.UserSession;
 import ru.pmsoft.twitterkiller.domain.factory.SessionFactory;
 import ru.pmsoft.twitterkiller.domain.factory.UserFactory;
 import ru.pmsoft.twitterkiller.domain.repository.SessionRepository;
@@ -11,7 +11,10 @@ import ru.pmsoft.twitterkiller.domain.repository.UserRepository;
 import ru.pmsoft.twitterkiller.rest.exceptions.ClientException;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.security.GeneralSecurityException;
 
@@ -40,12 +43,9 @@ public class UserResource {
         this.sessionRepository = sessionRepository;
         this.repositoryTweet = repositoryTweet;
         userFactory = new UserFactory();
-        sessionFactory = new SessionFactory();        
+        sessionFactory = new SessionFactory();
     }
 
-    
-
-   
 
     @POST
     @Produces("application/json")
@@ -64,15 +64,15 @@ public class UserResource {
         if (!userFactory.checkPassword(user, password))
             throw new ClientException(Status.UNAUTHORIZED, "Password is not correct");
 
-        Session session = sessionRepository.getByUser(user);
-        if (session != null && session.isExpired()) {
-            sessionRepository.delete(session);
+        UserSession userSession = sessionRepository.getByUser(user);
+        if (userSession != null && userSession.isExpired()) {
+            sessionRepository.delete(userSession);
         }
-        if (session == null || session.isExpired()) {
-            session = sessionFactory.create(user);
-            sessionRepository.create(session);
+        if (userSession == null || userSession.isExpired()) {
+            userSession = sessionFactory.create(user);
+            sessionRepository.create(userSession);
         }
-        return Response.status(200).entity(new TokenOutput(session.getToken(), session.getExpiration())).build();
+        return Response.status(200).entity(new TokenOutput(userSession.getToken(), userSession.getExpiration())).build();
     }
 
     @POST

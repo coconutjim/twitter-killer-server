@@ -2,11 +2,9 @@ package ru.pmsoft.twitterkiller.dataaccess;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import ru.pmsoft.twitterkiller.dataaccess.HibernateUtil;
 import ru.pmsoft.twitterkiller.domain.entity.Tweet;
 import ru.pmsoft.twitterkiller.domain.entity.User;
 import ru.pmsoft.twitterkiller.domain.repository.TweetRepository;
-
 
 import java.util.List;
 
@@ -15,7 +13,6 @@ public class DBTweetRepository implements TweetRepository {
 
     @Override
     public void createOrUpdate(Tweet tweet) {
-
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
@@ -24,8 +21,8 @@ public class DBTweetRepository implements TweetRepository {
             session.saveOrUpdate(tweet);
             session.getTransaction().commit();
         } finally {
-            if(session != null && session.isOpen())
-            session.close();
+            if (session != null && session.isOpen())
+                session.close();
         }
     }
 
@@ -41,7 +38,7 @@ public class DBTweetRepository implements TweetRepository {
             foundTweet = (List<Tweet>) session.createCriteria(Tweet.class).add(Restrictions.eq("id_user", ourUser.getId())).list();
 
         } finally {
-            if(session != null && session.isOpen())
+            if (session != null && session.isOpen())
                 session.close();
         }
         return foundTweet;
@@ -57,7 +54,7 @@ public class DBTweetRepository implements TweetRepository {
             foundTweet = (Tweet) session.createCriteria(Tweet.class).add(Restrictions.eq("id", tweetId)).list().get(0);
 
         } finally {
-            if(session != null && session.isOpen())
+            if (session != null && session.isOpen())
                 session.close();
         }
         return foundTweet;

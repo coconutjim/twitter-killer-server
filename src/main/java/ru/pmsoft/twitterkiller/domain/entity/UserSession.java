@@ -2,16 +2,16 @@ package ru.pmsoft.twitterkiller.domain.entity;
 
 import java.util.Date;
 
-public class Session {
+public class UserSession {
     private int id;
     private String token;
     private Date expiration;
     private int userId;
 
-    public Session() {
+    public UserSession() {
     }
 
-    public Session(String token, Date expiration, int userId) {
+    public UserSession(String token, Date expiration, int userId) {
         this.token = token;
         this.expiration = expiration;
         this.userId = userId;
