@@ -8,16 +8,16 @@ import java.util.Date;
 public class Tweet implements Serializable{
     private int id;
     private String tweet;
-    private int id_user;
+    private int userId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "YYYY-MM-dd'T'HH:mm:ssZ", timezone = "GMT+4")
     private Date date;
 
     private Tweet() { }
 
-    public Tweet(int id_user, String tweet) {
-        this.id_user = id_user;
+    public Tweet(int userId, String tweet) {
+        this.userId = userId;
         this.tweet = tweet;
-        this.date = new Date(); //Потом дата сделать
+        this.date = new Date();
     }
 
     public int getId() {
@@ -36,12 +36,12 @@ public class Tweet implements Serializable{
         this.tweet = tweet;
     }
 
-    public int getId_user() {
-        return id_user;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setId_user(int id_user) {
-        this.id_user = id_user;
+    public void setUserId(int id_user) {
+        this.userId = id_user;
     }
 
     public Date getDate() {

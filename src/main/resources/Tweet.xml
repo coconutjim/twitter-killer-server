@@ -9,9 +9,9 @@
             <generator class="increment" />
         </id>
         <property name="tweet" type="text">
-            <column name="TWIT" length="140" not-null="true" unique="true" />
+            <column name="TWEET" length="140" not-null="true" unique="true" />
         </property>
-        <property name="id_user" type="int">
+        <property name="userId" type="int">
             <column name="ID_USER"  not-null="true" />
         </property>
         <property name="date" type="java.util.Date">

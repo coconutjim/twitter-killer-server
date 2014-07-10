@@ -1,12 +1,11 @@
 package ru.pmsoft.twitterkiller.rest;
 
 import ru.pmsoft.twitterkiller.domain.dto.TokenOutput;
-import ru.pmsoft.twitterkiller.domain.entity.UserSession;
 import ru.pmsoft.twitterkiller.domain.entity.User;
+import ru.pmsoft.twitterkiller.domain.entity.UserSession;
 import ru.pmsoft.twitterkiller.domain.factory.SessionFactory;
 import ru.pmsoft.twitterkiller.domain.factory.UserFactory;
 import ru.pmsoft.twitterkiller.domain.repository.SessionRepository;
-import ru.pmsoft.twitterkiller.domain.repository.TweetRepository;
 import ru.pmsoft.twitterkiller.domain.repository.UserRepository;
 import ru.pmsoft.twitterkiller.rest.exceptions.ClientException;
 
@@ -27,12 +26,12 @@ public class UserResource {
     private SessionRepository sessionRepository;
     private UserFactory userFactory;
     private SessionFactory sessionFactory;
-    private TweetRepository repositoryTweet;
-
 
     @Inject
     public UserResource(UserRepository userRepository,
-                        SessionRepository sessionRepository, TweetRepository repositoryTweet) {
+                        SessionRepository sessionRepository,
+                        UserFactory userFactory,
+                        SessionFactory sessionFactory) {
         if (userRepository == null) {
             throw new IllegalArgumentException("Parameter 'userRepository' can't be null");
         }
@@ -41,14 +40,9 @@ public class UserResource {
         }
         this.userRepository = userRepository;
         this.sessionRepository = sessionRepository;
-        this.repositoryTweet = repositoryTweet;
-        userFactory = new UserFactory();
-        sessionFactory = new SessionFactory();        
+        this.userFactory = userFactory;
+        this.sessionFactory = sessionFactory;
     }
-
-    
-
-   
 
     @POST
     @Produces("application/json")

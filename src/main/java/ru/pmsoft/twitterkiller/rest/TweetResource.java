@@ -21,21 +21,25 @@ public class TweetResource {
 
     private UserRepository userRepository;
     private SessionRepository sessionRepository;
-    private TweetRepository repositoryTweet;
+    private TweetRepository tweetRepository;
 
 
     @Inject
     public TweetResource(UserRepository userRepository,
-                         SessionRepository sessionRepository, TweetRepository repositoryTweet) {
+                         SessionRepository sessionRepository,
+                         TweetRepository tweetRepository) {
         if (userRepository == null) {
             throw new IllegalArgumentException("Parameter 'userRepository' can't be null");
         }
         if (sessionRepository == null) {
             throw new IllegalArgumentException("Parameter 'sessionRepository' can't be null");
         }
+        if (tweetRepository == null) {
+            throw new IllegalArgumentException("Parameter 'tweetRepository' can't be null");
+        }
         this.userRepository = userRepository;
         this.sessionRepository = sessionRepository;
-        this.repositoryTweet = repositoryTweet;
+        this.tweetRepository = tweetRepository;
     }
 
     private static boolean isTweetCorrect(String tweet) {
@@ -55,16 +59,16 @@ public class TweetResource {
         if (!isTweetCorrect(text))
             throw new ClientException(Response.Status.BAD_REQUEST, "Tweet can not be empty or less than 140 letters");
         if (!isTokenCorrect(token))
-            throw new ClientException(Response.Status.BAD_REQUEST,"Token was empty");
+            throw new ClientException(Response.Status.BAD_REQUEST,"Token can not be empty");
 
         UserSession userSession = sessionRepository.getByToken(token);
         if (userSession == null || userSession.isExpired())
-            throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is expired or does not exist");
+            throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is invalid");
         User user = userRepository.getById(userSession.getUserId());
         int id_user = user.getId();
 
         Tweet tweet = new Tweet(id_user, text);
-        repositoryTweet.createOrUpdate(tweet);
+        tweetRepository.createOrUpdate(tweet);
         return Response.status(200).entity("Tweet is saved").build();
     }
 
@@ -79,7 +83,7 @@ public class TweetResource {
         if (userSession == null || userSession.isExpired())
             throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is expired or does not exist");
 
-        List<Tweet> Tweets = repositoryTweet.getAllByLogin(username);
+        List<Tweet> Tweets = tweetRepository.getAllByLogin(username);
         return Response.status(200).entity(new TweetOutput(Tweets)).build();
     }
 
@@ -93,7 +97,7 @@ public class TweetResource {
         if (userSession == null || userSession.isExpired())
             throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is expired or does not exist");
 
-        Tweet tweet = repositoryTweet.getById(tweetId);
+        Tweet tweet = tweetRepository.getById(tweetId);
         if(tweet == null)
             throw new ClientException(Response.Status.BAD_REQUEST,"Tweet by this id was not found");
         return Response.status(200).entity(tweet).build();

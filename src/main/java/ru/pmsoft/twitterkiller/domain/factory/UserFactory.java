@@ -2,28 +2,21 @@ package ru.pmsoft.twitterkiller.domain.factory;
 
 import ru.pmsoft.twitterkiller.domain.entity.User;
 import ru.pmsoft.twitterkiller.domain.util.PasswordEncrypter;
-import ru.pmsoft.twitterkiller.domain.util.RandomSaltGenerator;
-import ru.pmsoft.twitterkiller.domain.util.SHA256PasswordEncrypter;
-import ru.pmsoft.twitterkiller.domain.util.SaltGenerator;
+import ru.pmsoft.twitterkiller.domain.util.StringGenerator;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.security.GeneralSecurityException;
-
 
 public class UserFactory {
 
-    private SaltGenerator saltGenerator;
+    private StringGenerator saltGenerator;
     private PasswordEncrypter passwordEncrypter;
 
-    public UserFactory() {
-        saltGenerator = new RandomSaltGenerator();
-        passwordEncrypter = new SHA256PasswordEncrypter();
-    }
-
-    public void setSaltGenerator(SaltGenerator saltGenerator) {
+    @Inject
+    public UserFactory(@Named("salt") StringGenerator saltGenerator,
+                       PasswordEncrypter passwordEncrypter) {
         this.saltGenerator = saltGenerator;
-    }
-
-    public void setPasswordEncrypter(PasswordEncrypter passwordEncrypter) {
         this.passwordEncrypter = passwordEncrypter;
     }
 

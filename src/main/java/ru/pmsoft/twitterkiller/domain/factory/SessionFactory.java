@@ -2,25 +2,33 @@ package ru.pmsoft.twitterkiller.domain.factory;
 
 import ru.pmsoft.twitterkiller.domain.entity.User;
 import ru.pmsoft.twitterkiller.domain.entity.UserSession;
-import ru.pmsoft.twitterkiller.domain.util.TokenGenerator;
-import ru.pmsoft.twitterkiller.domain.util.UUIDGenerator;
+import ru.pmsoft.twitterkiller.domain.util.StringGenerator;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class SessionFactory {
-    int tokenLifeTime = 86400;
-    private TokenGenerator tokenGenerator;
-
-    public SessionFactory() {
-        tokenGenerator = new UUIDGenerator();
-    }
-
-    public void setTokenGenerator(TokenGenerator tokenGenerator) {
+    private int tokenLifeTime = 86400;
+    private StringGenerator tokenGenerator;
+    
+    @Inject
+    public SessionFactory(@Named("token") StringGenerator tokenGenerator) {
         if (tokenGenerator == null)
             throw new IllegalArgumentException("Parameter 'tokenGenerator' can't be null");
         this.tokenGenerator = tokenGenerator;
+    }
+
+    public int getTokenLifeTime() {
+        return tokenLifeTime;
+    }
+
+    public void setTokenLifeTime(int tokenLifeTime) {
+        if (tokenLifeTime <= 0)
+            throw new IllegalArgumentException("Parameter 'tokenLifeTime' must be positive");
+        this.tokenLifeTime = tokenLifeTime;
     }
 
     private Date computeExpiration() {
@@ -30,12 +38,7 @@ public class SessionFactory {
         return calendar.getTime();
     }
 
-    public void setTokenLifeTime(int tokenLifeTime) {
-        this.tokenLifeTime = tokenLifeTime;
-    }
-
     public UserSession create(User user) {
-        UserSession userSession = new UserSession(tokenGenerator.generate(), computeExpiration(), user.getId());
-        return userSession;
+        return new UserSession(tokenGenerator.generate(), computeExpiration(), user.getId());
     }
 }
