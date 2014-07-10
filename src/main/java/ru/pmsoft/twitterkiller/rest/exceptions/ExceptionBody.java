@@ -1,13 +1,13 @@
 package ru.pmsoft.twitterkiller.rest.exceptions;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement
 public class ExceptionBody {
     private String message;
 
     public ExceptionBody(String message) {
         this.message = message;
+    }
+
+    private ExceptionBody() {
     }
 
     public String getMessage() {
@@ -16,7 +16,7 @@ public class ExceptionBody {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj==null)
+        if (obj == null)
             return false;
         if (!(obj instanceof ExceptionBody))
             return false;

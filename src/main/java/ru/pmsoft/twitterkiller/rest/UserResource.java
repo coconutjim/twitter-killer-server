@@ -38,6 +38,12 @@ public class UserResource {
         if (sessionRepository == null) {
             throw new IllegalArgumentException("Parameter 'sessionRepository' can't be null");
         }
+        if (userFactory == null) {
+            throw new IllegalArgumentException("Parameter 'userFactory' can't be null");
+        }
+        if (sessionFactory == null) {
+            throw new IllegalArgumentException("Parameter 'sessionFactory' can't be null");
+        }
         this.userRepository = userRepository;
         this.sessionRepository = sessionRepository;
         this.userFactory = userFactory;

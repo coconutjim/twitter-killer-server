@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Path("tweet")
 public class TweetResource {
@@ -52,10 +53,8 @@ public class TweetResource {
 
     @POST
     @Path("/add")
-    @Produces("application/json")
-    @Consumes("text/plain")
     public Response addTweet(@HeaderParam("token") String token, String text) {
-
+        Logger.getGlobal().info(text);
         if (!isTweetCorrect(text))
             throw new ClientException(Response.Status.BAD_REQUEST, "Tweet can not be empty or less than 140 letters");
         if (!isTokenCorrect(token))
@@ -83,8 +82,9 @@ public class TweetResource {
         if (userSession == null || userSession.isExpired())
             throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is expired or does not exist");
 
-        List<Tweet> Tweets = tweetRepository.getAllByLogin(username);
-        return Response.status(200).entity(new TweetOutput(Tweets)).build();
+        List<Tweet> tweets = tweetRepository.getAllByLogin(username);
+        return Response.status(200).entity(new TweetOutput(tweets)).build();
+        //return Response.status(200).entity(tweets).build();
     }
 
     @GET
