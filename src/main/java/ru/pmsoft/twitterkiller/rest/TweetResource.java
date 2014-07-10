@@ -84,7 +84,7 @@ public class TweetResource {
     }
 
     @GET
-    @Path("/{id:^[0-9]*$}")
+    @Path("/{id}")
     @Produces("application/json")
     public Response getTweet(@HeaderParam("token") String token, @PathParam("id") int tweetId) {
         if (!isTokenCorrect(token))
@@ -92,7 +92,10 @@ public class TweetResource {
         UserSession userSession = sessionRepository.getByToken(token);
         if (userSession == null || userSession.isExpired())
             throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is expired or does not exist");
+
         Tweet tweet = repositoryTweet.getById(tweetId);
+        if(tweet == null)
+            throw new ClientException(Response.Status.BAD_REQUEST,"Tweet by this id was not found");
         return Response.status(200).entity(tweet).build();
     }
 }

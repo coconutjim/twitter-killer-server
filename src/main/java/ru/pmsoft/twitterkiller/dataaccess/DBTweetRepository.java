@@ -33,9 +33,9 @@ public class DBTweetRepository implements TweetRepository {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
 
-            User ourUser = ((List<User>) session.createQuery("select user from User user where user.login = '" + name + "'").list()).get(0);
-
-            foundTweet = (List<Tweet>) session.createCriteria(Tweet.class).add(Restrictions.eq("id_user", ourUser.getId())).list();
+            List<User> ourUserList = (List<User>) session.createQuery("select user from User user where user.login = '" + name + "'").list();
+            if(!ourUserList.isEmpty())
+            foundTweet = (List<Tweet>) session.createCriteria(Tweet.class).add(Restrictions.eq("id_user", ourUserList.get(0).getId())).list();
 
         } finally {
             if (session != null && session.isOpen())
@@ -51,8 +51,8 @@ public class DBTweetRepository implements TweetRepository {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
 
-            foundTweet = (Tweet) session.createCriteria(Tweet.class).add(Restrictions.eq("id", tweetId)).list().get(0);
-
+            List<Tweet> resultList =  session.createCriteria(Tweet.class).add(Restrictions.eq("id", tweetId)).list();
+            if(!resultList.isEmpty()) foundTweet = resultList.get(0);
         } finally {
             if (session != null && session.isOpen())
                 session.close();
