@@ -27,12 +27,11 @@ public class UserResource {
     private SessionRepository sessionRepository;
     private UserFactory userFactory;
     private SessionFactory sessionFactory;
-    private TweetRepository repositoryTweet;
 
 
     @Inject
     public UserResource(UserRepository userRepository,
-                        SessionRepository sessionRepository, TweetRepository repositoryTweet) {
+                        SessionRepository sessionRepository) {
         if (userRepository == null) {
             throw new IllegalArgumentException("Parameter 'userRepository' can't be null");
         }
@@ -41,7 +40,6 @@ public class UserResource {
         }
         this.userRepository = userRepository;
         this.sessionRepository = sessionRepository;
-        this.repositoryTweet = repositoryTweet;
         userFactory = new UserFactory();
         sessionFactory = new SessionFactory();        
     }
