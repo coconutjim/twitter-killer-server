@@ -64,6 +64,8 @@ public class UserResource {
         if (!userFactory.checkPassword(user, password))
             throw new ClientException(Status.UNAUTHORIZED, "Password is not correct");
 
+
+
         Session session = sessionRepository.getByUser(user);
         if (session != null && session.isExpired()) {
             sessionRepository.delete(session);
