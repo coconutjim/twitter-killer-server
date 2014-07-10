@@ -53,7 +53,7 @@ public class TweetResource {
         if (session == null || session.isExpired())
             throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is expired or does not exist");
 
-        int id_user = user.getId();
+        String id_user = user.getId();
 
         Tweet tweet = new Tweet(id_user, text);
         repositoryTweet.createOrUpdate(tweet);

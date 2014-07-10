@@ -4,14 +4,14 @@
 
 <hibernate-mapping>
     <class name="ru.pmsoft.twitterkiller.domain.entity.Tweet"  table="twitts">
-        <id name="id" type="java.lang.Integer">
+        <id name="id" type="java.lang.String">
             <column name="ID" />
-            <generator class="increment" />
+            <generator class="guid" />
         </id>
-        <property name="getTweet" type="text">
-            <column name="TWIT" length="20" not-null="true" unique="true" />
+        <property name="tweet" type="text">
+            <column name="TWIT" length="140" not-null="true" unique="true" />
         </property>
-        <property name="id_user" type="int">
+        <property name="id_user" type="java.lang.String">
             <column name="ID_USER" length="20" not-null="true" />
         </property>
         <property name="date" type="java.util.Date">

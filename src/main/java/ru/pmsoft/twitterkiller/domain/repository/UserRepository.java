@@ -7,7 +7,7 @@ public interface UserRepository {
 
     User getByLogin(String login);
 
-    User getById(int id);
+    User getById(String id);
 
     Iterable<User> getAll();
 }
