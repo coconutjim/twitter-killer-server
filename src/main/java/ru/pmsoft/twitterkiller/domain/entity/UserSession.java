@@ -3,25 +3,25 @@ package ru.pmsoft.twitterkiller.domain.entity;
 import java.util.Date;
 
 public class UserSession {
-    private String  id;
+    private int  id;
     private String token;
     private Date expiration;
-    private String userId;
+    private int userId;
 
     public UserSession() {
     }
 
-    public UserSession(String token, Date expiration, String userId) {
+    public UserSession(String token, Date expiration, int userId) {
         this.token = token;
         this.expiration = expiration;
         this.userId = userId;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -41,11 +41,11 @@ public class UserSession {
         this.expiration = expiration;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 

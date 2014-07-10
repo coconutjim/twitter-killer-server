@@ -56,7 +56,7 @@ public class TweetResource {
         if (userSession == null || userSession.isExpired())
             throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is expired or does not exist");
         User user = userRepository.getById(userSession.getUserId());
-        String id_user = user.getId();
+        int id_user = user.getId();
 
         Tweet tweet = new Tweet(id_user, text);
         repositoryTweet.createOrUpdate(tweet);
@@ -81,7 +81,7 @@ public class TweetResource {
     @GET
     @Path("/{id}")
     @Produces("application/json")
-    public Response getTweet(@HeaderParam("token") String token, @PathParam("id") String tweetId) {
+    public Response getTweet(@HeaderParam("token") String token, @PathParam("id") int tweetId) {
         UserSession userSession = sessionRepository.getByToken(token);
         if (userSession == null || userSession.isExpired())
             throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is expired or does not exist");

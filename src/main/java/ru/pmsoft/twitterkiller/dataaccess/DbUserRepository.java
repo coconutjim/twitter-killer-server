@@ -39,7 +39,7 @@ public class DbUserRepository implements UserRepository {
     }
 
     @Override
-    public User getById(String id){
+    public User getById(int id){
         Session session = null;
         User user = null;
         try {

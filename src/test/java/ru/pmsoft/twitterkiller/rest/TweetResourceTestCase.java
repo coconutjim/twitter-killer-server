@@ -74,11 +74,11 @@ public class TweetResourceTestCase {
         SessionRepository sessionRepository =  mock(SessionRepository.class);
         UserRepository userRepository = mock(UserRepository.class);
         User user = mock(User.class);
-        when(userRepository.getById(any(String.class))).thenReturn(user);
+        when(userRepository.getById(any(Integer.class))).thenReturn(user);
         UserSession session = mock(UserSession.class);
         when((sessionRepository.getByToken(any(String.class)))).thenReturn(session);
         when(session.isExpired()).thenReturn(false);
-        when(user.getId()).thenReturn("user");
+        when(user.getId()).thenReturn(0);
 
         TweetResource sut = createSystemUnderTest
                 (userRepository,
@@ -120,7 +120,7 @@ public class TweetResourceTestCase {
             switch(method)
             {
                 case "addTweet": sut.addTweet("foo", "bar"); break;
-                case "getTweet":  sut.getTweet("foo", "bar"); break;
+                case "getTweet":  sut.getTweet("foo", 1); break;
                 case "allTweets": sut.allTweets("foo", "bar"); break;
             }
         }
@@ -147,7 +147,7 @@ public class TweetResourceTestCase {
             switch(method)
             {
                 case "addTweet": sut.addTweet("foo", "bar"); break;
-                case "getTweet":  sut.getTweet("foo", "bar"); break;
+                case "getTweet":  sut.getTweet("foo", 1); break;
                 case "allTweets": sut.allTweets("foo", "bar"); break;
             }
         }
@@ -165,8 +165,8 @@ public class TweetResourceTestCase {
     public void allTweets_OK()
     {
         List<Tweet> alltweets = new ArrayList<Tweet>();
-        alltweets.add(new Tweet("bar", "foo"));
-        alltweets.add(new Tweet("foo", "bar"));
+        alltweets.add(new Tweet(0, "foo"));
+        alltweets.add(new Tweet(0, "bar"));
         TweetRepository tweetRepository = mock(TweetRepository.class);
         SessionRepository sessionRepository =  mock(SessionRepository.class);
         UserSession session = mock(UserSession.class);
@@ -190,13 +190,13 @@ public class TweetResourceTestCase {
         when((sessionRepository.getByToken(any(String.class)))).thenReturn(session);
         when(session.isExpired()).thenReturn(false);
         TweetRepository tweetRepository = mock(TweetRepository.class);
-        Tweet tweet = new Tweet("foo", "bar");
-        when(tweetRepository.getById(anyString())).thenReturn(tweet);
+        Tweet tweet = new Tweet(0, "bar");
+        when(tweetRepository.getById(anyInt())).thenReturn(tweet);
         TweetResource sut = createSystemUnderTest(mock(UserRepository.class),
                 sessionRepository,
                 tweetRepository);
 
-        Response response = sut.getTweet("foo", "bar");
+        Response response = sut.getTweet("foo", 0);
         assertEquals(response.getEntity(), tweet);
     }
 

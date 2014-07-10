@@ -45,7 +45,7 @@ public class DBTweetRepository implements TweetRepository {
     }
 
     @Override
-    public Tweet getById(String tweetId) {
+    public Tweet getById(int tweetId) {
         Session session = null;
         Tweet foundTweet = null;
         try {

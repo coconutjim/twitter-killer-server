@@ -7,7 +7,7 @@ public class User implements Serializable {
     private String login;
     private String passwordHash;
     private String salt;
-    private String id;
+    private int id;
 
     public User() {
     }
@@ -40,11 +40,11 @@ public class User implements Serializable {
         this.salt = salt;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 }

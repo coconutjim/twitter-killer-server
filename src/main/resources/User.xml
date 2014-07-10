@@ -4,9 +4,9 @@
 
 <hibernate-mapping>
     <class name="ru.pmsoft.twitterkiller.domain.entity.User" table="users">
-        <id name="id" type="java.lang.String">
+        <id name="id" type="int">
             <column name="ID"/>
-            <generator class="guid"/>
+            <generator class="increment"/>
         </id>
         <property name="login" type="text">
             <column name="LOGIN" length="20" not-null="true" unique="true"/>
