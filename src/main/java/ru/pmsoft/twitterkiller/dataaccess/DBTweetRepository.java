@@ -2,7 +2,6 @@ package ru.pmsoft.twitterkiller.dataaccess;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import ru.pmsoft.twitterkiller.dataaccess.HibernateUtil;
 import ru.pmsoft.twitterkiller.domain.entity.Tweet;
 import ru.pmsoft.twitterkiller.domain.entity.User;
 import ru.pmsoft.twitterkiller.domain.repository.TweetRepository;
@@ -48,7 +47,7 @@ public class DBTweetRepository implements TweetRepository {
     }
 
     @Override
-    public Tweet getAllById(int tweetId) {
+    public Tweet getById(String tweetId) {
         Session session = null;
         Tweet foundTweet = null;
         try {
