@@ -40,7 +40,7 @@ public class TweetResourceTestCase {
     public void addTweet_whenTextOfTweetIsNullOrEmpty_shouldThrowClientException(String token, String text) {
         TweetResource sut = createSystemUnderTest(null, null, null);
         try{
-             sut.addTweet("foo", null);
+             sut.addTweet(token, text);
         }
         catch (ClientException ex)
         {
@@ -194,8 +194,6 @@ public class TweetResourceTestCase {
         Response response = sut.getTweet("foo", 0);
         assertEquals(response.getEntity(), tweet);
     }
-
-
 
   @DataProvider
     private Object[][] InvalidReturnForDifferentTesting()

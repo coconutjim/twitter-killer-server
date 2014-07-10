@@ -5,7 +5,6 @@ import org.testng.annotations.Test;
 import ru.pmsoft.twitterkiller.domain.entity.User;
 import ru.pmsoft.twitterkiller.domain.factory.UserFactory;
 import ru.pmsoft.twitterkiller.domain.repository.SessionRepository;
-import ru.pmsoft.twitterkiller.domain.repository.TweetRepository;
 import ru.pmsoft.twitterkiller.domain.repository.UserRepository;
 import ru.pmsoft.twitterkiller.rest.exceptions.ClientException;
 import ru.pmsoft.twitterkiller.rest.exceptions.ExceptionBody;
@@ -54,9 +53,8 @@ public class UserResourceTestCase {
 
         final String password = "bar";
         final String login = "foo";
-        User user = mock(User.class);
         UserFactory userFactoryStub = new UserFactory();
-        user  = userFactoryStub.create(login, password);
+        User user  = userFactoryStub.create(login, password);
         UserRepository repositoryStub = mock(UserRepository.class);
         when(repositoryStub.getByLogin(login)).thenReturn(user);
         UserResource sut = createSystemUnderTest(repositoryStub, null);
