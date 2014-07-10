@@ -3,7 +3,7 @@ package ru.pmsoft.twitterkiller.rest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import ru.pmsoft.twitterkiller.domain.dto.TweetOutput;
-import ru.pmsoft.twitterkiller.domain.entity.Session;
+import ru.pmsoft.twitterkiller.domain.entity.UserSession;
 import ru.pmsoft.twitterkiller.domain.entity.Tweet;
 import ru.pmsoft.twitterkiller.domain.entity.User;
 import ru.pmsoft.twitterkiller.domain.repository.SessionRepository;
@@ -74,11 +74,11 @@ public class TweetResourceTestCase {
         SessionRepository sessionRepository =  mock(SessionRepository.class);
         UserRepository userRepository = mock(UserRepository.class);
         User user = mock(User.class);
-        when(userRepository.getById(any(Integer.class))).thenReturn(user);
-        Session session = mock(Session.class);
+        when(userRepository.getById(any(String.class))).thenReturn(user);
+        UserSession session = mock(UserSession.class);
         when((sessionRepository.getByToken(any(String.class)))).thenReturn(session);
         when(session.isExpired()).thenReturn(false);
-        when(user.getId()).thenReturn(4);
+        when(user.getId()).thenReturn("user");
 
         TweetResource sut = createSystemUnderTest
                 (userRepository,
@@ -109,7 +109,7 @@ public class TweetResourceTestCase {
     public void alltestingmethods_whenSessionIsExpired_shouldThrowClientException(String method)
     {
         SessionRepository sessionRepository =  mock(SessionRepository.class);
-        Session session = mock(Session.class);
+        UserSession session = mock(UserSession.class);
         when((sessionRepository.getByToken(any(String.class)))).thenReturn(session);
         when(session.isExpired()).thenReturn(true);
         TweetResource sut = createSystemUnderTest(mock(UserRepository.class),
@@ -120,7 +120,7 @@ public class TweetResourceTestCase {
             switch(method)
             {
                 case "addTweet": sut.addTweet("foo", "bar"); break;
-                case "getTweet":  sut.getTweet("foo", 1); break;
+                case "getTweet":  sut.getTweet("foo", "bar"); break;
                 case "allTweets": sut.allTweets("foo", "bar"); break;
             }
         }
@@ -137,7 +137,7 @@ public class TweetResourceTestCase {
     public void alltestingmethods_whenSessionIsNull_shouldThrowClientException(String method)
     {
         SessionRepository sessionRepository =  mock(SessionRepository.class);
-        Session session = null;
+        UserSession session = null;
         when((sessionRepository.getByToken(any(String.class)))).thenReturn(session);
         TweetResource sut = createSystemUnderTest(mock(UserRepository.class),
                 sessionRepository,
@@ -147,7 +147,7 @@ public class TweetResourceTestCase {
             switch(method)
             {
                 case "addTweet": sut.addTweet("foo", "bar"); break;
-                case "getTweet":  sut.getTweet("foo", 1); break;
+                case "getTweet":  sut.getTweet("foo", "bar"); break;
                 case "allTweets": sut.allTweets("foo", "bar"); break;
             }
         }
@@ -165,11 +165,11 @@ public class TweetResourceTestCase {
     public void allTweets_OK()
     {
         List<Tweet> alltweets = new ArrayList<Tweet>();
-        alltweets.add(new Tweet(1, "foo"));
-        alltweets.add(new Tweet(1, "bar"));
+        alltweets.add(new Tweet("bar", "foo"));
+        alltweets.add(new Tweet("foo", "bar"));
         TweetRepository tweetRepository = mock(TweetRepository.class);
         SessionRepository sessionRepository =  mock(SessionRepository.class);
-        Session session = mock(Session.class);
+        UserSession session = mock(UserSession.class);
         when((sessionRepository.getByToken(any(String.class)))).thenReturn(session);
         when(session.isExpired()).thenReturn(false);
         when(tweetRepository.getAllByLogin(anyString())).thenReturn(alltweets);
@@ -186,17 +186,17 @@ public class TweetResourceTestCase {
     public void getTweet_OK() {
 
         SessionRepository sessionRepository =  mock(SessionRepository.class);
-        Session session = mock(Session.class);
+        UserSession session = mock(UserSession.class);
         when((sessionRepository.getByToken(any(String.class)))).thenReturn(session);
         when(session.isExpired()).thenReturn(false);
         TweetRepository tweetRepository = mock(TweetRepository.class);
-        Tweet tweet = new Tweet(3, "bar");
-        when(tweetRepository.getById(anyInt())).thenReturn(tweet);
+        Tweet tweet = new Tweet("foo", "bar");
+        when(tweetRepository.getById(anyString())).thenReturn(tweet);
         TweetResource sut = createSystemUnderTest(mock(UserRepository.class),
                 sessionRepository,
                 tweetRepository);
 
-        Response response = sut.getTweet("foo", 0);
+        Response response = sut.getTweet("foo", "bar");
         assertEquals(response.getEntity(), tweet);
     }
 

@@ -1,7 +1,7 @@
 package ru.pmsoft.twitterkiller.rest;
 
 import ru.pmsoft.twitterkiller.domain.dto.TokenOutput;
-import ru.pmsoft.twitterkiller.domain.entity.Session;
+import ru.pmsoft.twitterkiller.domain.entity.UserSession;
 import ru.pmsoft.twitterkiller.domain.entity.User;
 import ru.pmsoft.twitterkiller.domain.factory.SessionFactory;
 import ru.pmsoft.twitterkiller.domain.factory.UserFactory;
@@ -67,7 +67,7 @@ public class UserResource {
         if (!userFactory.checkPassword(user, password))
             throw new ClientException(Status.UNAUTHORIZED, "Password is not correct");
 
-        Session session = sessionRepository.getByUser(user);
+        UserSession session = sessionRepository.getByUser(user);
         if (session != null && session.isExpired()) {
             sessionRepository.delete(session);
         }
