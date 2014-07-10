@@ -18,7 +18,7 @@ public class TokenOutput {
         return token;
     }
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "YYYY-MM-DD'T'HH:mm:ss.SSSZ", timezone = "GMT+4")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "YYYY-MM-dd'T'HH:mm:ssZ", timezone = "GMT+4")
     public Date getExpiration() {
         return expiration;
     }

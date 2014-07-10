@@ -1,19 +1,20 @@
 package ru.pmsoft.twitterkiller.dataaccess;
 
+import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import ru.pmsoft.twitterkiller.domain.entity.Session;
 import ru.pmsoft.twitterkiller.domain.entity.User;
+import ru.pmsoft.twitterkiller.domain.entity.UserSession;
 import ru.pmsoft.twitterkiller.domain.repository.SessionRepository;
 
 public class DbSessionRepository implements SessionRepository {
 
     @Override
-    public void create(Session session) {
-        org.hibernate.Session dbSession = null;
+    public void create(UserSession userSession) {
+        Session dbSession = null;
         try {
             dbSession = HibernateUtil.getSessionFactory().openSession();
             dbSession.beginTransaction();
-            dbSession.saveOrUpdate(session);
+            dbSession.saveOrUpdate(userSession);
             dbSession.getTransaction().commit();
         } finally {
             if (dbSession != null && dbSession.isOpen())
@@ -22,42 +23,42 @@ public class DbSessionRepository implements SessionRepository {
     }
 
     @Override
-    public Session getByUser(User user) {
-        org.hibernate.Session dbSession = null;
-        Session session = null;
+    public UserSession getByUser(User user) {
+        Session dbSession = null;
+        UserSession userSession = null;
         try {
             dbSession = HibernateUtil.getSessionFactory().openSession();
-            session = (Session) dbSession.createCriteria(Session.class)
+            userSession = (UserSession) dbSession.createCriteria(UserSession.class)
                     .add(Restrictions.eq("userId", user.getId())).uniqueResult();
         } finally {
             if (dbSession != null && dbSession.isOpen())
                 dbSession.close();
         }
-        return session;
+        return userSession;
     }
 
     @Override
-    public Session getByToken(String token) {
-        org.hibernate.Session dbSession = null;
-        Session session = null;
+    public UserSession getByToken(String token) {
+        Session dbSession = null;
+        UserSession userSession = null;
         try {
             dbSession = HibernateUtil.getSessionFactory().openSession();
-            session = (Session) dbSession.createCriteria(Session.class)
+            userSession = (UserSession) dbSession.createCriteria(UserSession.class)
                     .add(Restrictions.eq("token", token)).uniqueResult();
         } finally {
             if (dbSession != null && dbSession.isOpen())
                 dbSession.close();
         }
-        return session;
+        return userSession;
     }
 
     @Override
-    public void delete(Session session) {
-        org.hibernate.Session dbSession = null;
+    public void delete(UserSession userSession) {
+        Session dbSession = null;
         try {
             dbSession = HibernateUtil.getSessionFactory().openSession();
             dbSession.beginTransaction();
-            dbSession.delete(session);
+            dbSession.delete(userSession);
             dbSession.getTransaction().commit();
         } finally {
             if (dbSession != null && dbSession.isOpen())

@@ -1,9 +1,9 @@
 package ru.pmsoft.twitterkiller.rest;
 
 import ru.pmsoft.twitterkiller.domain.dto.TweetOutput;
-import ru.pmsoft.twitterkiller.domain.entity.Session;
 import ru.pmsoft.twitterkiller.domain.entity.Tweet;
 import ru.pmsoft.twitterkiller.domain.entity.User;
+import ru.pmsoft.twitterkiller.domain.entity.UserSession;
 import ru.pmsoft.twitterkiller.domain.factory.UserFactory;
 import ru.pmsoft.twitterkiller.domain.repository.SessionRepository;
 import ru.pmsoft.twitterkiller.domain.repository.TweetRepository;
@@ -26,7 +26,7 @@ public class TweetResource {
 
     @Inject
     public TweetResource(UserRepository userRepository,
-                        SessionRepository sessionRepository, TweetRepository repositoryTweet) {
+                         SessionRepository sessionRepository, TweetRepository repositoryTweet) {
         if (userRepository == null) {
             throw new IllegalArgumentException("Parameter 'userRepository' can't be null");
         }
@@ -36,24 +36,28 @@ public class TweetResource {
         this.userRepository = userRepository;
         this.sessionRepository = sessionRepository;
         this.repositoryTweet = repositoryTweet;
-        }
+    }
+
+    private static boolean isTweetCorrect(String tweet) {
+        return !(tweet == null || tweet.isEmpty() || tweet.trim().isEmpty() || tweet.trim().length() > 140);
+    }
 
     @POST
     @Path("/add")
     @Produces("application/json")
     @Consumes("text/plain")
-    public Response addTweet(@HeaderParam("token") String token,  String text) {
+    public Response addTweet(@HeaderParam("token") String token, String text) {
 
         if (!isTweetCorrect(text))
             throw new ClientException(Response.Status.BAD_REQUEST, "Tweet can not be empty or less than 140 letters");
 
 
-        Session session = sessionRepository.getByToken(token);
-        User user = userRepository.getById(session.getUserId());
-        if (session == null || session.isExpired())
+        UserSession userSession = sessionRepository.getByToken(token);
+        User user = userRepository.getById(userSession.getUserId());
+        if (userSession == null || userSession.isExpired())
             throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is expired or does not exist");
 
-        int id_user = user.getId();
+        String id_user = user.getId();
 
         Tweet tweet = new Tweet(id_user, text);
         repositoryTweet.createOrUpdate(tweet);
@@ -67,8 +71,8 @@ public class TweetResource {
 
         if (!UserFactory.isLoginCorrect(username))
             throw new ClientException(Response.Status.BAD_REQUEST, "Login can not be empty");
-        Session session = sessionRepository.getByToken(token);
-        if (session == null || session.isExpired())
+        UserSession userSession = sessionRepository.getByToken(token);
+        if (userSession == null || userSession.isExpired())
             throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is expired or does not exist");
 
         List<Tweet> Tweets = repositoryTweet.getAllByLogin(username);
@@ -78,16 +82,11 @@ public class TweetResource {
     @GET
     @Path("/{id:^[0-9]*$}")
     @Produces("application/json")
-    public Response getTweet(@HeaderParam("token") String token, @PathParam("id") int tweetId){
-        Session session = sessionRepository.getByToken(token);
-        if(session == null || session.isExpired())
+    public Response getTweet(@HeaderParam("token") String token, @PathParam("id") int tweetId) {
+        UserSession userSession = sessionRepository.getByToken(token);
+        if (userSession == null || userSession.isExpired())
             throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is expired or does not exist");
         Tweet tweet = repositoryTweet.getById(tweetId);
         return Response.status(200).entity(tweet).build();
-    }
-
-
-    private static boolean isTweetCorrect(String tweet) {
-        return !(tweet == null || tweet.isEmpty() || tweet.trim().isEmpty() || tweet.trim().length() > 140);
     }
 }

@@ -1,15 +1,13 @@
 package ru.pmsoft.twitterkiller.domain.entity;
 
-
 import java.io.Serializable;
-import java.util.Date;
 
 @SuppressWarnings("JpaObjectClassSignatureInspection")
 public class User implements Serializable {
     private String login;
     private String passwordHash;
     private String salt;
-    private int id;
+    private String id;
 
     public User() {
     }
@@ -42,11 +40,11 @@ public class User implements Serializable {
         this.salt = salt;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 }

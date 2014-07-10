@@ -11,7 +11,10 @@ import ru.pmsoft.twitterkiller.domain.repository.UserRepository;
 import ru.pmsoft.twitterkiller.rest.exceptions.ClientException;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.security.GeneralSecurityException;
 
@@ -63,8 +66,6 @@ public class UserResource {
             throw new ClientException(Status.UNAUTHORIZED, "User is not found");
         if (!userFactory.checkPassword(user, password))
             throw new ClientException(Status.UNAUTHORIZED, "Password is not correct");
-
-
 
         Session session = sessionRepository.getByUser(user);
         if (session != null && session.isExpired()) {
