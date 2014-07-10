@@ -19,7 +19,7 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User getById(int id) {
+    public User getById(String id) {
         return null;
     }
 
