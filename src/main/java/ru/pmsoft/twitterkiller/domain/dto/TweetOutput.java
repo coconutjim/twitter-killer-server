@@ -7,7 +7,7 @@ import java.util.List;
 
 public class TweetOutput {
 
-    private List<Tweet> tweets;
+    private final List<Tweet> tweets;
 
     public TweetOutput(List<Tweet> tweets) {
         this.tweets = tweets;

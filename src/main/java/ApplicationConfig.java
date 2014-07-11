@@ -1,7 +1,7 @@
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
-import ru.pmsoft.twitterkiller.dataaccess.DbTweetRepository;
 import ru.pmsoft.twitterkiller.dataaccess.DbSessionRepository;
+import ru.pmsoft.twitterkiller.dataaccess.DbTweetRepository;
 import ru.pmsoft.twitterkiller.dataaccess.DbUserRepository;
 import ru.pmsoft.twitterkiller.domain.factory.SessionFactory;
 import ru.pmsoft.twitterkiller.domain.factory.UserFactory;
@@ -27,7 +27,6 @@ public class ApplicationConfig extends ResourceConfig {
                 bind(SHA256PasswordEncrypter.class).to(PasswordEncrypter.class).in(Singleton.class);
                 bind(UserFactory.class).to(UserFactory.class).in(Singleton.class);
                 bind(SessionFactory.class).to(SessionFactory.class).in(Singleton.class);
-
             }
         });
         packages(true, "ru.pmsoft.twitterkiller");

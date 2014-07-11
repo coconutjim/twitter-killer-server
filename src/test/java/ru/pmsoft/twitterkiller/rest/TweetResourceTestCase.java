@@ -31,7 +31,7 @@ public class TweetResourceTestCase {
     private static TweetResource createSystemUnderTest(UserRepository repository,
                                                       SessionRepository sessionRepository,
                                                       TweetRepository tweetRepository) {
-        return new TweetResource(repository == null ? mock(UserRepository.class) : repository,
+        return new TweetResource(repository==null ? mock(UserRepository.class) : repository,
                 sessionRepository == null ? mock(SessionRepository.class) : sessionRepository,
                 tweetRepository == null ? mock(TweetRepository.class) : tweetRepository);
     }
@@ -39,29 +39,32 @@ public class TweetResourceTestCase {
     @Test (dataProvider = "invalidDataSourceForAddTweet")
     public void addTweet_whenTextOfTweetIsNullOrEmpty_shouldThrowClientException(String token, String text) {
         TweetResource sut = createSystemUnderTest(null, null, null);
-        try {
+        try{
              sut.addTweet(token, text);
         }
-        catch (ClientException ex) {
+        catch (ClientException ex)
+        {
             assertEquals(ex.getResponse().getEntity(),
                     new ExceptionBody("Tweet can not be empty or less than 140 letters"));
             return;
         }
         fail();
     }
-
     @DataProvider
-    public Object[][] invalidDataSourceForAddTweet() {
-        return new Object[][] {
-                new Object[]{"foo", null},
-                new Object[]{"foo", "             "},
-                new Object[]{"foo", createLongString()}
+    public Object[][] invalidDataSourceForAddTweet()
+    {
+        return new Object[][]
+                {
+                  new Object[]{"foo", null},
+                        new Object[]{"foo", "             "},
+                        new Object[]{"foo", createLongString()}
                 };
     }
 
 
     @Test
-    public void addTweet_shouldWorkWell() {
+    public void addTweet_shouldWorkWell()
+    {
         SessionRepository sessionRepository =  mock(SessionRepository.class);
         UserRepository userRepository = mock(UserRepository.class);
         User user = mock(User.class);
@@ -71,7 +74,10 @@ public class TweetResourceTestCase {
         when(session.isExpired()).thenReturn(false);
         when(user.getId()).thenReturn(0);
 
-        TweetResource sut = createSystemUnderTest(userRepository, sessionRepository, null);
+        TweetResource sut = createSystemUnderTest
+                (userRepository,
+                sessionRepository,
+                null);
 
         Response response = sut.addTweet("foo", "bar");
         assertEquals((String)response.getEntity(), "Tweet is saved");
@@ -80,7 +86,9 @@ public class TweetResourceTestCase {
 
     @Test
     public void allTweets_whenUsernameIsEmpty_shouldThrowClientException() {
-        TweetResource sut = createSystemUnderTest(mock(UserRepository.class), null, null);
+        TweetResource sut = createSystemUnderTest(mock(UserRepository.class),
+                        null,
+                        null);
         try {
             sut.allTweets("foo", "");
         }
@@ -92,7 +100,8 @@ public class TweetResourceTestCase {
     }
 
     @Test (dataProvider = "InvalidReturnForDifferentTesting")
-    public void allTestingMethods_whenSessionIsExpired_shouldThrowClientException(String method) {
+    public void alltestingmethods_whenSessionIsExpired_shouldThrowClientException(String method)
+    {
         UserRepository userRepository = mock(UserRepository.class);
         when(userRepository.getByLogin(any(String.class))).thenReturn(new User("foo"));
         SessionRepository sessionRepository =  mock(SessionRepository.class);
@@ -103,14 +112,16 @@ public class TweetResourceTestCase {
                 sessionRepository,
                 null);
 
-        try {
-            switch(method) {
+        try{
+            switch(method)
+            {
                 case "addTweet": sut.addTweet("foo", "bar"); break;
                 case "getTweet":  sut.getTweet("foo", 1); break;
                 case "allTweets": sut.allTweets("foo", "bar"); break;
             }
         }
-        catch (ClientException ex) {
+        catch (ClientException ex)
+        {
             assertEquals(ex.getResponse().getEntity(),
                     new ExceptionBody("Your token is invalid"));
             return;
@@ -119,24 +130,27 @@ public class TweetResourceTestCase {
     }
 
     @Test (dataProvider = "InvalidReturnForDifferentTesting")
-    public void allTestingMethods_whenSessionIsNull_shouldThrowClientException(String method)
+    public void alltestingmethods_whenSessionIsNull_shouldThrowClientException(String method)
     {
         UserRepository userRepository = mock(UserRepository.class);
         when(userRepository.getByLogin(any(String.class))).thenReturn(new User("foo"));
         SessionRepository sessionRepository =  mock(SessionRepository.class);
-        when((sessionRepository.getByToken(any(String.class)))).thenReturn(null);
+        UserSession session = null;
+        when((sessionRepository.getByToken(any(String.class)))).thenReturn(session);
         TweetResource sut = createSystemUnderTest(userRepository,
                 sessionRepository,
                 null);
 
-        try {
-            switch(method) {
+        try{
+            switch(method)
+            {
                 case "addTweet": sut.addTweet("foo", "bar"); break;
                 case "getTweet":  sut.getTweet("foo", 1); break;
                 case "allTweets": sut.allTweets("foo", "bar"); break;
             }
         }
-        catch (ClientException ex) {
+        catch (ClientException ex)
+        {
             assertTrue(ex.getResponse().getEntity().
                     equals(new ExceptionBody("Your token is invalid")));
             return;
@@ -146,7 +160,8 @@ public class TweetResourceTestCase {
 
 
     @Test
-    public void allTweets_shouldWorkWell() {
+    public void allTweets_shouldWorkWell()
+    {
         UserRepository userRepository = mock(UserRepository.class);
         when(userRepository.getByLogin(any(String.class))).thenReturn(new User("foo"));
         List<Tweet> allTweets = new ArrayList<Tweet>();
@@ -163,11 +178,12 @@ public class TweetResourceTestCase {
 
         Response response = sut.allTweets("foo", "bar");
         TweetOutput output = (TweetOutput)response.getEntity();
-        assertEquals(output.getTweets(), allTweets);
+        assertEquals(output.getTweets(), alltweets);
     }
 
     @Test
     public void getTweet_shouldWorkWell() {
+
         SessionRepository sessionRepository =  mock(SessionRepository.class);
         UserSession session = mock(UserSession.class);
         when((sessionRepository.getByToken(any(String.class)))).thenReturn(session);
@@ -182,19 +198,20 @@ public class TweetResourceTestCase {
     }
 
   @DataProvider
-    private Object[][] InvalidReturnForDifferentTesting() {
-      return new Object[][] {
-              new Object[]{"allTweets"},
+    private Object[][] InvalidReturnForDifferentTesting()
+  {
+      return new Object[][]{
+        new Object[]{"allTweets"},
               new Object[]{"getTweet"},
               new Object[]{"addTweet"}
       };
   }
 
-    private static String createLongString() {
+    private static String createLongString()
+    {
         String s = "";
-        for (int i = 0; i < 150; ++ i) {
-            s = s + "1";
-        }
+        for (int i = 0; i< 150; i++)
+            s = s+"1";
         return s;
     }
 }

@@ -18,9 +18,7 @@ public class ExceptionBody {
     public boolean equals(Object obj) {
         if (obj == null)
             return false;
-        if (!(obj instanceof ExceptionBody))
-            return false;
-        return hashCode() == obj.hashCode();
+        return obj instanceof ExceptionBody && hashCode() == obj.hashCode();
     }
 
     @Override
