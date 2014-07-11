@@ -13,7 +13,6 @@ public class TokenOutput {
         this.token = token;
         this.expiration = expiration;
     }
-
     public String getToken() {
         return token;
     }
