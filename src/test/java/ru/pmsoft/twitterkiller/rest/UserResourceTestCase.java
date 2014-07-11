@@ -27,7 +27,7 @@ public class UserResourceTestCase {
                                                       SessionRepository sessionRepository,
                                                       UserFactory userFactory,
                                                       SessionFactory sessionFactory) {
-        return new UserResource(repository==null ? mock(UserRepository.class) : repository,
+        return new UserResource(repository == null ? mock(UserRepository.class) : repository,
                                 sessionRepository == null ? mock(SessionRepository.class) : sessionRepository,
                                 userFactory == null ? mock(UserFactory.class) : userFactory,
                                 sessionFactory == null ? mock(SessionFactory.class) : sessionFactory);
@@ -49,10 +49,10 @@ public class UserResourceTestCase {
 
     @DataProvider
     public Object[][] invalidAuthenticationTestData() {
-        return new Object[][]{
-                new Object[]{null, "foo", new ExceptionBody("Login can not be empty")},
-                new Object[]{"foo", null, new ExceptionBody("Password can not be empty")},
-                new Object[]{"foo", "bar", new ExceptionBody("User is not found")}
+        return new Object[][] {
+                new Object[] { null, "foo", new ExceptionBody("Login can not be empty") },
+                new Object[] { "foo", null, new ExceptionBody("Password can not be empty") },
+                new Object[] { "foo", "bar", new ExceptionBody("User is not found") }
         };
     }
 
@@ -80,11 +80,9 @@ public class UserResourceTestCase {
 
     @Test(dataProvider = "invalidRegisterTestData")
     public void register_withInvalidArguments_shouldThrowClientException
-            (String login, String password, ExceptionBody exceptionBody) throws GeneralSecurityException
-    {
+            (String login, String password, ExceptionBody exceptionBody) throws GeneralSecurityException {
         UserResource sut = createSystemUnderTest(null, null, null, null);
-        try
-        {
+        try {
             sut.register(login, password);
         }
         catch (ClientException ex) {
@@ -95,39 +93,39 @@ public class UserResourceTestCase {
     }
 
     @DataProvider
-    public Object[][] invalidRegisterTestData()
-    {
-        return new Object[][]{
-            new Object[]{null, "foo", new ExceptionBody("Login can not be empty")},
-                new Object[]{"foo", null, new ExceptionBody("Password can not be empty")},
+    public Object[][] invalidRegisterTestData() {
+        return new Object[][] {
+            new Object[] { null, "foo", new ExceptionBody("Login can not be empty") },
+                new Object[] { "foo", null, new ExceptionBody("Password can not be empty") },
         };
     }
 
     @Test
-    public void register_ifLoginIsAlreadyTaken_shouldThrowClientException()throws GeneralSecurityException
-    {
+    public void register_ifLoginIsAlreadyTaken_shouldThrowClientException()
+            throws GeneralSecurityException {
         UserRepository userRepository = mock(UserRepository.class);
         UserResource sut = createSystemUnderTest(userRepository, null, null, null);
         String login = "foo";
         String password = "bar";
-        User user = new UserFactory(mock(StringGenerator.class), mock(PasswordEncrypter.class)).create(login, password);
+        User user = new UserFactory(mock(StringGenerator.class),
+                mock(PasswordEncrypter.class)).create(login, password);
         when(userRepository.getByLogin(login)).thenReturn(user);
-        try
-        {
+        try {
             sut.register(login, password);
         }
         catch (ClientException ex){
-            assertEquals(ex.getResponse().getEntity(),
-                new ExceptionBody("Login is already taken"));
+            assertEquals(ex.getResponse().getEntity(), new ExceptionBody("Login is already taken"));
             return;
         }
         fail();
     }
     @Test
-    public void register_thisTestWorksWell() throws GeneralSecurityException
-    {
+    public void register_thisTestWorksWell() throws GeneralSecurityException {
         UserResource sut = createSystemUnderTest(null,null, null, null);
         Response resp = sut.register("foo", "bar");
-        assertEquals(resp.getStatus(), Response.Status.OK.getStatusCode());
+        String s = (String)resp.getEntity();
+        String arr[] = s.split("\"");
+        assertEquals(arr[3], "foo");
     }
 }
+

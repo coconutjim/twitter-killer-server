@@ -11,27 +11,26 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
-public class UserFactoryTest {
-    private static UserFactory createSystemUnderTest(StringGenerator saltGenerator, PasswordEncrypter passwordEncrypter) {
+public class UserFactoryTestCase {
 
+    private static UserFactory createSystemUnderTest(StringGenerator saltGenerator,
+                                                     PasswordEncrypter passwordEncrypter) {
         return new UserFactory(saltGenerator == null ? mock(StringGenerator.class) : saltGenerator,
                 passwordEncrypter == null ? mock(PasswordEncrypter.class) : passwordEncrypter);
 
 
     }
-
     @Test
     public void create_ShouldWorkWell() throws GeneralSecurityException {
         StringGenerator saltGenerator = mock(StringGenerator.class);
         when(saltGenerator.generate()).thenReturn("foo");
         PasswordEncrypter passwordEncrypter = mock(PasswordEncrypter.class);
         when(passwordEncrypter.encrypt(any(String.class))).thenReturn("bar");
-        UserFactory sut = createSystemUnderTest(saltGenerator, passwordEncrypter);
+        UserFactory sut = createSystemUnderTest(saltGenerator, passwordEncrypter) ;
         User user = sut.create("foo", "bar");
-        assertEquals(user.getSalt(), "foo");
+        assertEquals(user.getSalt(),"foo" );
         assertEquals(user.getPasswordHash(), "bar");
     }
 
@@ -42,11 +41,10 @@ public class UserFactoryTest {
         when(saltGenerator.generate()).thenReturn("foo");
         PasswordEncrypter passwordEncrypter = mock(PasswordEncrypter.class);
         when(passwordEncrypter.encrypt(anyString())).thenReturn(s + "bar");
-        UserFactory sut = createSystemUnderTest(saltGenerator, passwordEncrypter);
+        UserFactory sut = createSystemUnderTest(saltGenerator, passwordEncrypter) ;
         User user = sut.create("foo", s);
         user.setPasswordHash(passwordEncrypter.encrypt(s));
         assertTrue(sut.checkPassword(user, s));
-
     }
 
 }
