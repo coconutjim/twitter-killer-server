@@ -4,15 +4,17 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.util.Date;
+
 @SuppressWarnings("JpaObjectClassSignatureInspection")
-public class Tweet implements Serializable{
+public class Tweet implements Serializable {
     private int id;
     private String text;
     private int userId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "YYYY-MM-dd'T'HH:mm:ssZ", timezone = "GMT+4")
     private Date date;
 
-    private Tweet() { }
+    private Tweet() {
+    }
 
     public Tweet(int userId, String text) {
         this.userId = userId;

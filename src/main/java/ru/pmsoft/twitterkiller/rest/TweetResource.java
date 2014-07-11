@@ -43,7 +43,7 @@ public class TweetResource {
         return !(tweet == null || tweet.isEmpty() || tweet.trim().isEmpty() || tweet.trim().length() > 140);
     }
 
-    private static boolean isTokenCorrect(String token){
+    private static boolean isTokenCorrect(String token) {
         return !(token == null || token.trim().isEmpty());
     }
 
@@ -54,7 +54,7 @@ public class TweetResource {
         if (!isTweetCorrect(text))
             throw new ClientException(Response.Status.BAD_REQUEST, "Tweet can not be empty or less than 140 letters");
         if (!isTokenCorrect(token))
-            throw new ClientException(Response.Status.BAD_REQUEST,"Token can not be empty");
+            throw new ClientException(Response.Status.BAD_REQUEST, "Token can not be empty");
 
         UserSession userSession = sessionRepository.getByToken(token);
 
@@ -77,7 +77,7 @@ public class TweetResource {
         if (!UserFactory.isLoginCorrect(username))
             throw new ClientException(Response.Status.BAD_REQUEST, "Login can not be empty");
 
-        if(userRepository.getByLogin(username) == null)
+        if (userRepository.getByLogin(username) == null)
             throw new ClientException(Response.Status.BAD_REQUEST, "User is not found");
 
         UserSession userSession = sessionRepository.getByToken(token);
@@ -94,14 +94,14 @@ public class TweetResource {
     public Response getTweet(@HeaderParam("token") String token, @PathParam("id") int tweetId) {
 
         if (!isTokenCorrect(token))
-            throw new ClientException(Response.Status.BAD_REQUEST,"Token was empty");
+            throw new ClientException(Response.Status.BAD_REQUEST, "Token was empty");
         UserSession userSession = sessionRepository.getByToken(token);
         if (userSession == null || userSession.isExpired())
             throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is invalid");
 
         Tweet tweet = tweetRepository.getById(tweetId);
-        if(tweet == null)
-            throw new ClientException(Response.Status.BAD_REQUEST,"Tweet by this id was not found");
+        if (tweet == null)
+            throw new ClientException(Response.Status.BAD_REQUEST, "Tweet by this id was not found");
 
         return Response.status(200).entity(tweet).build();
     }

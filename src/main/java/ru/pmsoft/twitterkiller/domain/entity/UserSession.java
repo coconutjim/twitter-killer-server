@@ -3,7 +3,7 @@ package ru.pmsoft.twitterkiller.domain.entity;
 import java.util.Date;
 
 public class UserSession {
-    private int  id;
+    private int id;
     private String token;
     private Date expiration;
     private int userId;

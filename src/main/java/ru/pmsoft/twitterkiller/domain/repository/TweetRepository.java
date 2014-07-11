@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface TweetRepository {
     void createOrUpdate(Tweet tweet);
+
     List<Tweet> getAllByLogin(String name);
+
     public Tweet getById(int tweetId);
 }

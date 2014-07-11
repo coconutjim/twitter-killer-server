@@ -13,7 +13,7 @@ import java.util.GregorianCalendar;
 public class SessionFactory {
     private final StringGenerator tokenGenerator;
     private int tokenLifeTime = 86400;
-    
+
     @Inject
     public SessionFactory(@Named("token") StringGenerator tokenGenerator) {
         if (tokenGenerator == null)
