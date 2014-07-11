@@ -7,16 +7,16 @@ import java.util.Date;
 @SuppressWarnings("JpaObjectClassSignatureInspection")
 public class Tweet implements Serializable{
     private int id;
-    private String tweet;
+    private String text;
     private int userId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "YYYY-MM-dd'T'HH:mm:ssZ", timezone = "GMT+4")
     private Date date;
 
     private Tweet() { }
 
-    public Tweet(int userId, String tweet) {
+    public Tweet(int userId, String text) {
         this.userId = userId;
-        this.tweet = tweet;
+        this.text = text;
         this.date = new Date();
     }
 
@@ -28,12 +28,12 @@ public class Tweet implements Serializable{
         this.id = id;
     }
 
-    public String getTweet() {
-        return tweet;
+    public String getText() {
+        return text;
     }
 
-    public void setTweet(String tweet) {
-        this.tweet = tweet;
+    public void setText(String tweet) {
+        this.text = tweet;
     }
 
     public int getUserId() {
