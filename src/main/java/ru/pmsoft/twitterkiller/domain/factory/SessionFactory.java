@@ -11,18 +11,14 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class SessionFactory {
+    private final StringGenerator tokenGenerator;
     private int tokenLifeTime = 86400;
-    private StringGenerator tokenGenerator;
     
     @Inject
     public SessionFactory(@Named("token") StringGenerator tokenGenerator) {
         if (tokenGenerator == null)
             throw new IllegalArgumentException("Parameter 'tokenGenerator' can't be null");
         this.tokenGenerator = tokenGenerator;
-    }
-
-    public int getTokenLifeTime() {
-        return tokenLifeTime;
     }
 
     public void setTokenLifeTime(int tokenLifeTime) {

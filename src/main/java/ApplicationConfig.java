@@ -1,6 +1,7 @@
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import ru.pmsoft.twitterkiller.dataaccess.DbTweetRepository;
+import ru.pmsoft.twitterkiller.dataaccess.DbTweetRepository;
 import ru.pmsoft.twitterkiller.dataaccess.DbSessionRepository;
 import ru.pmsoft.twitterkiller.dataaccess.DbUserRepository;
 import ru.pmsoft.twitterkiller.domain.factory.SessionFactory;

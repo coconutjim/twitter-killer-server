@@ -49,7 +49,6 @@ public class TweetResourceTestCase {
             return;
         }
         fail();
-
     }
     @DataProvider
     public Object[][] invalidDataSourceForAddTweet()
@@ -136,8 +135,7 @@ public class TweetResourceTestCase {
         UserRepository userRepository = mock(UserRepository.class);
         when(userRepository.getByLogin(any(String.class))).thenReturn(new User("foo"));
         SessionRepository sessionRepository =  mock(SessionRepository.class);
-        UserSession session = null;
-        when((sessionRepository.getByToken(any(String.class)))).thenReturn(session);
+        when((sessionRepository.getByToken(any(String.class)))).thenReturn(null);
         TweetResource sut = createSystemUnderTest(userRepository,
                 sessionRepository,
                 null);
@@ -165,23 +163,21 @@ public class TweetResourceTestCase {
     {
         UserRepository userRepository = mock(UserRepository.class);
         when(userRepository.getByLogin(any(String.class))).thenReturn(new User("foo"));
-        List<Tweet> alltweets = new ArrayList<Tweet>();
-        alltweets.add(new Tweet(0, "foo"));
-        alltweets.add(new Tweet(0, "bar"));
+        List<Tweet> allTweets = new ArrayList<Tweet>();
+        allTweets.add(new Tweet(0, "foo"));
+        allTweets.add(new Tweet(0, "bar"));
 
         TweetRepository tweetRepository = mock(TweetRepository.class);
         SessionRepository sessionRepository =  mock(SessionRepository.class);
         UserSession session = mock(UserSession.class);
         when((sessionRepository.getByToken(any(String.class)))).thenReturn(session);
         when(session.isExpired()).thenReturn(false);
-        when(tweetRepository.getAllByLogin(anyString())).thenReturn(alltweets);
-        TweetResource sut = createSystemUnderTest(userRepository,
-                sessionRepository,
-                tweetRepository);
+        when(tweetRepository.getAllByLogin(anyString())).thenReturn(allTweets);
+        TweetResource sut = createSystemUnderTest(userRepository, sessionRepository, tweetRepository);
 
         Response response = sut.allTweets("foo", "bar");
         TweetOutput output = (TweetOutput)response.getEntity();
-        assertEquals(output.getTweets(), alltweets);
+        assertEquals(output.getTweets(), allTweets);
     }
 
     @Test
@@ -194,9 +190,7 @@ public class TweetResourceTestCase {
         TweetRepository tweetRepository = mock(TweetRepository.class);
         Tweet tweet = new Tweet(0, "bar");
         when(tweetRepository.getById(anyInt())).thenReturn(tweet);
-        TweetResource sut = createSystemUnderTest(null,
-                sessionRepository,
-                tweetRepository);
+        TweetResource sut = createSystemUnderTest(null, sessionRepository, tweetRepository);
 
         Response response = sut.getTweet("foo", 0);
         assertEquals(response.getEntity(), tweet);

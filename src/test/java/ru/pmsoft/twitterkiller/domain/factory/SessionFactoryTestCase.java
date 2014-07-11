@@ -4,7 +4,6 @@ package ru.pmsoft.twitterkiller.domain.factory;
 import org.testng.annotations.Test;
 import ru.pmsoft.twitterkiller.domain.entity.User;
 import ru.pmsoft.twitterkiller.domain.entity.UserSession;
-import ru.pmsoft.twitterkiller.domain.factory.SessionFactory;
 import ru.pmsoft.twitterkiller.domain.util.StringGenerator;
 
 import java.util.Calendar;
@@ -21,7 +20,7 @@ public class SessionFactoryTestCase {
         return new SessionFactory(tokenGenerator == null ? mock(StringGenerator.class) : tokenGenerator);
     }
 
-    private User dummyUser = new User("LeoTheMagnificent");
+    final private User dummyUser = new User("LeoTheMagnificent");
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void constructor_ifTokenIsNull_shouldThrowIllegalArgumentException() {

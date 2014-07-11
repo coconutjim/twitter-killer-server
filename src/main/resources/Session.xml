@@ -12,7 +12,7 @@
             <column name="TOKEN" not-null="true" unique="true"/>
         </property>
         <property name="expiration" type="java.util.Date">
-            <column name="EXPIRATION" length="20" not-null="true"/>
+            <column name="EXPIRATION" not-null="true"/>
         </property>
         <property name="userId" type="int">
             <column name="USER_ID" not-null="true"/>
