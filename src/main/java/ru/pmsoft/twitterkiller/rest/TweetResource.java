@@ -85,7 +85,7 @@ public class TweetResource {
 
         UserSession userSession = sessionRepository.getByToken(token);
         if (userSession == null || userSession.isExpired())
-            throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is expired or does not exist");
+            throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is invalid");
 
         List<Tweet> tweets = tweetRepository.getAllByLogin(username);
         return Response.status(200).entity(new TweetOutput(tweets)).build();
@@ -100,7 +100,7 @@ public class TweetResource {
             throw new ClientException(Response.Status.BAD_REQUEST,"Token was empty");
         UserSession userSession = sessionRepository.getByToken(token);
         if (userSession == null || userSession.isExpired())
-            throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is expired or does not exist");
+            throw new ClientException(Response.Status.UNAUTHORIZED, "Your token is invalid");
 
         Tweet tweet = tweetRepository.getById(tweetId);
         if(tweet == null)
