@@ -103,11 +103,13 @@ public class TweetResourceTestCase {
     @Test (dataProvider = "InvalidReturnForDifferentTesting")
     public void alltestingmethods_whenSessionIsExpired_shouldThrowClientException(String method)
     {
+        UserRepository userRepository = mock(UserRepository.class);
+        when(userRepository.getByLogin(any(String.class))).thenReturn(new User("foo"));
         SessionRepository sessionRepository =  mock(SessionRepository.class);
         UserSession session = mock(UserSession.class);
         when((sessionRepository.getByToken(any(String.class)))).thenReturn(session);
         when(session.isExpired()).thenReturn(true);
-        TweetResource sut = createSystemUnderTest(null,
+        TweetResource sut = createSystemUnderTest(userRepository,
                 sessionRepository,
                 null);
 
@@ -131,10 +133,12 @@ public class TweetResourceTestCase {
     @Test (dataProvider = "InvalidReturnForDifferentTesting")
     public void alltestingmethods_whenSessionIsNull_shouldThrowClientException(String method)
     {
+        UserRepository userRepository = mock(UserRepository.class);
+        when(userRepository.getByLogin(any(String.class))).thenReturn(new User("foo"));
         SessionRepository sessionRepository =  mock(SessionRepository.class);
         UserSession session = null;
         when((sessionRepository.getByToken(any(String.class)))).thenReturn(session);
-        TweetResource sut = createSystemUnderTest(null,
+        TweetResource sut = createSystemUnderTest(userRepository,
                 sessionRepository,
                 null);
 
@@ -159,16 +163,19 @@ public class TweetResourceTestCase {
     @Test
     public void allTweets_shouldWorkWell()
     {
+        UserRepository userRepository = mock(UserRepository.class);
+        when(userRepository.getByLogin(any(String.class))).thenReturn(new User("foo"));
         List<Tweet> alltweets = new ArrayList<Tweet>();
         alltweets.add(new Tweet(0, "foo"));
         alltweets.add(new Tweet(0, "bar"));
+
         TweetRepository tweetRepository = mock(TweetRepository.class);
         SessionRepository sessionRepository =  mock(SessionRepository.class);
         UserSession session = mock(UserSession.class);
         when((sessionRepository.getByToken(any(String.class)))).thenReturn(session);
         when(session.isExpired()).thenReturn(false);
         when(tweetRepository.getAllByLogin(anyString())).thenReturn(alltweets);
-        TweetResource sut = createSystemUnderTest(null,
+        TweetResource sut = createSystemUnderTest(userRepository,
                 sessionRepository,
                 tweetRepository);
 
