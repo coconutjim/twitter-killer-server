@@ -5,8 +5,6 @@ import org.hibernate.criterion.Restrictions;
 import ru.pmsoft.twitterkiller.domain.entity.User;
 import ru.pmsoft.twitterkiller.domain.repository.UserRepository;
 
-import java.util.List;
-
 public class DbUserRepository implements UserRepository {
 
     @Override

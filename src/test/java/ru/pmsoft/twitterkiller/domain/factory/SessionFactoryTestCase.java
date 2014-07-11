@@ -21,7 +21,7 @@ public class SessionFactoryTestCase {
         return new SessionFactory(tokenGenerator == null ? mock(StringGenerator.class) : tokenGenerator);
     }
 
-    private User dummyUser = new User("LeoTheMagnificent");
+    private final User dummyUser = new User("LeoTheMagnificent");
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void constructor_ifTokenIsNull_shouldThrowIllegalArgumentException() {

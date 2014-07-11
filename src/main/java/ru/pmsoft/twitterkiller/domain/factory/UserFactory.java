@@ -10,8 +10,8 @@ import java.security.GeneralSecurityException;
 
 public class UserFactory {
 
-    private StringGenerator saltGenerator;
-    private PasswordEncrypter passwordEncrypter;
+    private final StringGenerator saltGenerator;
+    private final PasswordEncrypter passwordEncrypter;
 
     @Inject
     public UserFactory(@Named("salt") StringGenerator saltGenerator,

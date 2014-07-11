@@ -16,7 +16,6 @@ import javax.ws.rs.core.Response;
 import java.security.GeneralSecurityException;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
@@ -111,8 +110,7 @@ public class UserResourceTestCase {
         UserResource sut = createSystemUnderTest(userRepository, null, null, null);
         String login = "foo";
         String password = "bar";
-        User user = mock(User.class);
-        user = new UserFactory(mock(StringGenerator.class), mock(PasswordEncrypter.class)).create(login, password);
+        User user = new UserFactory(mock(StringGenerator.class), mock(PasswordEncrypter.class)).create(login, password);
         when(userRepository.getByLogin(login)).thenReturn(user);
         try
         {
