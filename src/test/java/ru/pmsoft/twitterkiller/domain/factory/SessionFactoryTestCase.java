@@ -1,4 +1,4 @@
-package ru.pmsoft.twitterkiller.rest;
+package ru.pmsoft.twitterkiller.domain.factory;
 
 
 import org.testng.annotations.Test;
