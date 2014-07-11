@@ -51,19 +51,4 @@ public class DbUserRepository implements UserRepository {
         }
         return user;
     }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public Iterable<User> getAll() {
-        List<User> foundUsers = null;
-        Session session = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            foundUsers = (List<User>) session.createCriteria(User.class).list();
-        } finally {
-            if (session != null && session.isOpen())
-                session.close();
-        }
-        return foundUsers;
-    }
 }

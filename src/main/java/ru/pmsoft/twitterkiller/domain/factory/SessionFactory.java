@@ -21,10 +21,6 @@ public class SessionFactory {
         this.tokenGenerator = tokenGenerator;
     }
 
-    public int getTokenLifeTime() {
-        return tokenLifeTime;
-    }
-
     public void setTokenLifeTime(int tokenLifeTime) {
         if (tokenLifeTime <= 0)
             throw new IllegalArgumentException("Parameter 'tokenLifeTime' must be positive");
