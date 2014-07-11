@@ -8,7 +8,7 @@
             <column name="ID" />
             <generator class="increment" />
         </id>
-        <property name="tweet" type="text">
+        <property name="text" type="text">
             <column name="TWEET" length="140" not-null="true" unique="true" />
         </property>
         <property name="userId" type="int">
