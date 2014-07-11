@@ -18,11 +18,9 @@ import java.util.List;
 @Path("tweet")
 public class TweetResource {
 
-
-    private UserRepository userRepository;
-    private SessionRepository sessionRepository;
-    private TweetRepository tweetRepository;
-
+    private final UserRepository userRepository;
+    private final SessionRepository sessionRepository;
+    private final TweetRepository tweetRepository;
 
     @Inject
     public TweetResource(UserRepository userRepository,

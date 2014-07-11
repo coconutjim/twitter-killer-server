@@ -128,8 +128,6 @@ public class UserResourceTestCase {
     {
         UserResource sut = createSystemUnderTest(null,null, null, null);
         Response resp = sut.register("foo", "bar");
-        String s = (String)resp.getEntity();
-        String arr[] = s.split("\"");
-        assertEquals(arr[3], "foo");
+        assertEquals(resp.getStatus(), Response.Status.OK.getStatusCode());
     }
 }

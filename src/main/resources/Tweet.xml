@@ -3,19 +3,19 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="ru.pmsoft.twitterkiller.domain.entity.Tweet"  table="tweets">
+    <class name="ru.pmsoft.twitterkiller.domain.entity.Tweet" table="tweets">
         <id name="id" type="int">
-            <column name="ID" />
-            <generator class="increment" />
+            <column name="ID"/>
+            <generator class="increment"/>
         </id>
         <property name="text" type="text">
-            <column name="TWEET" length="140" not-null="true" unique="true" />
+            <column name="TWEET" length="140" not-null="true" unique="true"/>
         </property>
         <property name="userId" type="int">
-            <column name="ID_USER"  not-null="true" />
+            <column name="ID_USER" not-null="true"/>
         </property>
         <property name="date" type="java.util.Date">
-            <column name="DATE" length="20" not-null="true" unique="true" />
+            <column name="DATE" not-null="true" unique="true"/>
         </property>
     </class>
 </hibernate-mapping>
