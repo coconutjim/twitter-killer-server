@@ -43,7 +43,7 @@ public class TweetResource {
     }
 
     private static boolean isTweetCorrect(String tweet) {
-        return !(tweet == null || tweet.isEmpty() || tweet.trim().isEmpty() || tweet.trim().length() > 140);
+        return !(tweet == null || tweet.isEmpty() || tweet.trim().isEmpty() || tweet.length() > 140);
     }
 
     private static boolean isTokenCorrect(String token){
