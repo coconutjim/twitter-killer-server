@@ -13,7 +13,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.*;
 
-public class UserFactoryTest {
+public class UserFactoryTestCase {
+
     private static UserFactory createSystemUnderTest(StringGenerator saltGenerator,
                                                      PasswordEncrypter passwordEncrypter) {
         return new UserFactory(saltGenerator == null ? mock(StringGenerator.class) : saltGenerator,
