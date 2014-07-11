@@ -16,7 +16,6 @@ import javax.ws.rs.core.Response;
 import java.security.GeneralSecurityException;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
@@ -130,8 +129,6 @@ public class UserResourceTestCase {
     {
         UserResource sut = createSystemUnderTest(null,null, null, null);
         Response resp = sut.register("foo", "bar");
-        String s = (String)resp.getEntity();
-        String arr[] = s.split("\"");
-        assertEquals(arr[3], "foo");
+        assertEquals(resp.getStatus(), Response.Status.OK.getStatusCode());
     }
 }

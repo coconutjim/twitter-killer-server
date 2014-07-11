@@ -22,10 +22,10 @@ import static javax.ws.rs.core.Response.Status;
 @Path("user")
 public class UserResource {
 
-    private UserRepository userRepository;
-    private SessionRepository sessionRepository;
-    private UserFactory userFactory;
-    private SessionFactory sessionFactory;
+    private final UserRepository userRepository;
+    private final SessionRepository sessionRepository;
+    private final UserFactory userFactory;
+    private final SessionFactory sessionFactory;
 
     @Inject
     public UserResource(UserRepository userRepository,
@@ -90,6 +90,6 @@ public class UserResource {
 
         User user = userFactory.create(login, password);
         userRepository.createOrUpdate(user);
-        return Response.status(200).entity("{\"login\":" + "\"" + login + "\"}").build();
+        return Response.status(200).build();
     }
 }
