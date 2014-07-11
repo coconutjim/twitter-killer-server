@@ -54,7 +54,6 @@ public class TweetResource {
     @POST
     @Path("/add")
     public Response addTweet(@HeaderParam("token") String token, String text) {
-        Logger.getGlobal().info(text);
         if (!isTweetCorrect(text))
             throw new ClientException(Response.Status.BAD_REQUEST, "Tweet can not be empty or less than 140 letters");
         if (!isTokenCorrect(token))
