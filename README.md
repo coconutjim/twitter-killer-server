@@ -1,5 +1,5 @@
 # twitter-killer-server
-2013\. Study group project. Java server for "Twitter killer" app - very simplified Twitter analog.
+2013\. Study group project. Java server for "Twitter killer" app - greatly simplified Twitter analog.
 ## Structure
 * `src/main/java/../dataacess` - db util
 * `src/main/java/../domain/dto` - server answers
