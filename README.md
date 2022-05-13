@@ -14,4 +14,5 @@
 3. Getting all tweets
 ## Technology
 * Java (JAX-RS, Hibernate, Jackson, javax.inject, java.security, Mockito)
+* Jetty
 * Maven
